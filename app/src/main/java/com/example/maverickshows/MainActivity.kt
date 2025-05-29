@@ -40,6 +40,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
@@ -52,6 +54,10 @@ object Home
 object Search
 @Serializable
 object Favorites
+@Serializable
+data class Expanded(
+    val title: String
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +90,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     BottomAppBar(
         modifier = Modifier.height(100.dp),
         contentPadding = PaddingValues(0.dp),
-        containerColor = MaterialTheme.colorScheme.scrim
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -137,7 +143,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Favorites",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.onSurfaceVariant
                     } else {
                         Color.Gray
                     }
@@ -155,13 +161,19 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
         modifier = modifier
     ) {
         composable<Home> {
-            HomeUiScreen()
+            HomeUiScreen(navigateToExpanded = { title: String ->
+                navController.navigate(Expanded(title))
+            })
         }
         composable<Search> {
             SearchUiScreen()
         }
         composable<Favorites> {
             FavoritesUiScreen()
+        }
+        composable<Expanded> { backStackEntry ->
+            val route = backStackEntry.toRoute<Expanded>()
+            ExpandedScreen(title = route.title, navigateBack = { navController.popBackStack() })
         }
     }
 }
