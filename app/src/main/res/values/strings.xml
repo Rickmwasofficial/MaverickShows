@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MaverickShows</string>
+    <string name="movie_name">Peaky Blinders</string>
+    <string name="movie_description">
+        A gangster family epic set in 1900s England, centering on a gang who sew razor blades in the peaks of their caps, and their fierce boss Tommy Shelby.
+    </string>
+</resources>
