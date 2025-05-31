@@ -36,9 +36,10 @@ import androidx.compose.ui.unit.dp
 import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.MovieCard
+import com.example.maverickshows.app.core.components.TopBox
 
 @Composable
-fun HomeUiScreen(navigateToExpanded: (String) -> Unit, modifier: Modifier = Modifier) {
+fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -55,59 +56,16 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, modifier: Modifier = Modi
                 CategorySection()
             }
             item {
-                MovieRow("For You", { navigateToExpanded("For You") }, false)
+                MovieRow("For You", { navigateToExpanded("For You") }, { navigateToDetail() }, false)
             }
             item {
-                MovieRow("Popular Now", { navigateToExpanded("Popular Now") }, true)
+                MovieRow("Popular Now", { navigateToExpanded("Popular Now") }, { navigateToDetail() }, true)
             }
             item {
-                MovieRow("Top Rated", { navigateToExpanded("Top Rated") }, false)
+                MovieRow("Top Rated", { navigateToExpanded("Top Rated") }, { navigateToDetail() }, false)
             }
             item {
-                MovieRow("Upcoming", { navigateToExpanded("Upcoming") }, true)
-            }
-        }
-    }
-}
-
-@Composable
-fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Modifier) {
-    val cats = listOf<String>("Horror", "Drama", "United States")
-    Box(
-        modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
-    ) {
-        Image(
-            painter = painterResource(img),
-            contentDescription = stringResource(title),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            alpha = 0.59f
-        )
-        LazyRow(
-            modifier = Modifier.align(alignment = Alignment.BottomCenter),
-            contentPadding = PaddingValues(vertical = 20.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            items(cats.size) { cat ->
-                Button(
-                    onClick = { },
-                    modifier = Modifier.height(30.dp).padding(horizontal = 1.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0.3f, 0.3f, 0.3f, 0.6f),
-                        disabledContainerColor = Color(0.3f, 0.3f, 0.3f, 0.8f),
-                        contentColor = Color.White,
-                        disabledContentColor = Color.White
-                    ),
-                    enabled = false,
-                    shape = RoundedCornerShape(6.dp),
-                    contentPadding = PaddingValues(vertical = 0.dp, horizontal = 5.dp)
-                ) {
-                    Text(
-                        text = cats[cat],
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                }
+                MovieRow("Upcoming", { navigateToExpanded("Upcoming") }, { navigateToDetail() }, true)
             }
         }
     }
@@ -143,7 +101,7 @@ fun CategorySection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MovieRow(title: String, onClick: () -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
+fun MovieRow(title: String, onClick: () -> Unit, navigateToDetail: () -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -156,7 +114,7 @@ fun MovieRow(title: String, onClick: () -> Unit, expanded: Boolean, modifier: Mo
         ) {
             repeat(10) {
                 item {
-                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, expanded)
+                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, expanded, navigateToDetail = { navigateToDetail() })
                 }
             }
         }

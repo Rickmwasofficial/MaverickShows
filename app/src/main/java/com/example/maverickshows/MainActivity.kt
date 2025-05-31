@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
@@ -41,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
@@ -58,6 +60,8 @@ object Favorites
 data class Expanded(
     val title: String
 )
+@Serializable
+object Detail
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +72,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             MaverickShowsTheme {
                 Scaffold(
-                    containerColor = MaterialTheme.colorScheme.scrim,
+                    containerColor = MaterialTheme.colorScheme.background,
                     bottomBar = {
                         BottomNavigationBar(navController = navController)
                     },
@@ -107,7 +111,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Home",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.onSurface
                     } else {
                         Color.Gray
                     }
@@ -125,7 +129,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Search",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.onSurface
                     } else {
                         Color.Gray
                     }
@@ -143,7 +147,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Favorites",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        MaterialTheme.colorScheme.onSurface
                     } else {
                         Color.Gray
                     }
@@ -161,9 +165,14 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
         modifier = modifier
     ) {
         composable<Home> {
-            HomeUiScreen(navigateToExpanded = { title: String ->
-                navController.navigate(Expanded(title))
-            })
+            HomeUiScreen(
+                navigateToExpanded = { title: String ->
+                    navController.navigate(Expanded(title))
+                },
+                navigateToDetail = {
+                    navController.navigate(Detail)
+                }
+            )
         }
         composable<Search> {
             SearchUiScreen()
@@ -175,13 +184,26 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             val route = backStackEntry.toRoute<Expanded>()
             ExpandedScreen(title = route.title, navigateBack = { navController.popBackStack() })
         }
+        composable<Detail> {
+            DetailUiScreen()
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun GreetingPreview() {
+fun FullAppPreview() {
+    val navController = rememberNavController()
     MaverickShowsTheme {
-
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+            bottomBar = {
+                BottomNavigationBar(navController = navController)
+            },
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            AppNavHost(navController, Modifier.padding(innerPadding))
+        }
     }
 }

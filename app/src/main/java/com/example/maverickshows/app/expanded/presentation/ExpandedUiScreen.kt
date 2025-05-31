@@ -27,9 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.MovieCard
+import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
 fun ExpandedScreen(
@@ -44,10 +46,10 @@ fun ExpandedScreen(
     ) {
         Column(
             modifier = modifier.fillMaxSize().padding(top = 45.dp),
-            verticalArrangement = Arrangement.spacedBy(25.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Box(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                modifier = modifier.fillMaxWidth().padding(horizontal = 25.dp),
             ) {
                 IconButton(
                     onClick = { navigateBack() },
@@ -69,9 +71,9 @@ fun ExpandedScreen(
             }
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(170.dp),
-                modifier = Modifier.fillMaxSize().padding(start = 15.dp),
-                horizontalArrangement = Arrangement.spacedBy(1.dp),
-                verticalArrangement = Arrangement.spacedBy(1.dp)
+                modifier = Modifier.fillMaxSize().padding(start = 35.dp, top = 25.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalArrangement = Arrangement.spacedBy(1.dp),
             ) {
                 repeat(60) {
                     item {
@@ -80,5 +82,13 @@ fun ExpandedScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ExpandedPreview() {
+    MaverickShowsTheme {
+        ExpandedScreen("Text", {  })
     }
 }
