@@ -42,7 +42,7 @@ import com.example.maverickshows.R
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
-fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Modifier, isFullDesc: Boolean = false, navigateBack: () -> Unit = { }) {
+fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
     val cats = listOf<String>("Horror", "Drama", "United States")
     Box(
         modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
@@ -54,49 +54,51 @@ fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Mo
             modifier = Modifier.fillMaxSize(),
             alpha = 0.59f
         )
-        if (isFullDesc) {
+        if (isFullDesc || isActor) {
             Row(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 25.dp, vertical = 20.dp).align(Alignment.TopStart).height(25.dp),
+                modifier = modifier.fillMaxWidth().padding(horizontal = 25.dp, vertical = 45.dp).align(Alignment.TopStart).height(35.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
                     onClick = { navigateBack() },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(14.dp)).size(25.dp).fillMaxWidth()
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh, RoundedCornerShape(17.dp)).size(35.dp).fillMaxWidth()
                 ) {
                     androidx.compose.material3.Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "View more"
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Card(
-                        modifier = Modifier.width(30.dp).fillMaxHeight(),
-                        shape = RoundedCornerShape(5.dp),
+                if (isFullDesc && !isActor) {
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Text(
-                            text = "6.1",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxSize().padding(vertical = 5.dp)
-                        )
-                    }
-                    Card(
-                        modifier = Modifier.width(60.dp).fillMaxHeight(),
-                        shape = RoundedCornerShape(5.dp)
-                    ) {
-                        Text(
-                            text = "IMDb 6.4",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxSize().padding(vertical = 5.dp)
-                        )
+                        Card(
+                            modifier = Modifier.width(30.dp).height(25.dp).fillMaxHeight(),
+                            shape = RoundedCornerShape(5.dp),
+                        ) {
+                            Text(
+                                text = "6.1",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxSize().padding(vertical = 5.dp)
+                            )
+                        }
+                        Card(
+                            modifier = Modifier.width(60.dp).height(25.dp).fillMaxHeight(),
+                            shape = RoundedCornerShape(5.dp)
+                        ) {
+                            Text(
+                                text = "IMDb 6.4",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxSize().padding(vertical = 5.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -106,7 +108,7 @@ fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Mo
             verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (isFullDesc) {
+            if (isFullDesc || isActor) {
                 Text(
                     text = stringResource(title),
                     style = MaterialTheme.typography.titleLarge,

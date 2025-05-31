@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -44,7 +45,11 @@ import com.example.maverickshows.app.home.presentation.MovieRow
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
-fun DetailUiScreen(modifier: Modifier = Modifier) {
+fun DetailUiScreen(
+    navigateToBack: () -> Unit,
+    navigateToActor: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -55,7 +60,7 @@ fun DetailUiScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true)
+                TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true, navigateBack = { navigateToBack() })
             }
             item {
                 MovieDesc(stringResource(R.string.movie_description))
@@ -67,7 +72,7 @@ fun DetailUiScreen(modifier: Modifier = Modifier) {
                 Ratings()
             }
             item {
-                CastAndCrew()
+                CastAndCrew(navigateToActor = { navigateToActor() })
             }
             item {
                 MoreSuggestions("You may also like", { }, false)
@@ -154,9 +159,10 @@ fun Ratings(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CastCard(name: String, title: String, @DrawableRes img: Int, modifier: Modifier = Modifier) {
+fun CastCard(name: String, title: String, @DrawableRes img: Int,
+             navigateToActor: () -> Unit, modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.height(80.dp).width(200.dp).background(Color.Transparent, RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp)).padding(vertical = 5.dp),
+        modifier = modifier.height(80.dp).width(200.dp).background(Color.Transparent, RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp)).padding(vertical = 5.dp).clickable(onClick = { navigateToActor() }),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -184,7 +190,7 @@ fun CastCard(name: String, title: String, @DrawableRes img: Int, modifier: Modif
 }
 
 @Composable
-fun CastAndCrew(modifier: Modifier= Modifier) {
+fun CastAndCrew(navigateToActor: () -> Unit, modifier: Modifier= Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -197,7 +203,7 @@ fun CastAndCrew(modifier: Modifier= Modifier) {
         ) {
             repeat(20) {
                 item {
-                    CastCard("Erick Mwangi", "Actor", R.drawable.peaky, Modifier.weight(1f))
+                    CastCard("Erick Mwangi", "Actor", R.drawable.peaky, { navigateToActor() }, Modifier.weight(1f))
                 }
             }
         }
@@ -229,7 +235,7 @@ fun MoreSuggestions(title: String, onClick: () -> Unit, expanded: Boolean, modif
 @Composable
 fun DetailUiPreview() {
     MaverickShowsTheme(darkTheme = true) {
-       DetailUiScreen()
+       DetailUiScreen({ }, { })
     }
 }
 

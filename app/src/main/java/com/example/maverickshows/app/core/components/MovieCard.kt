@@ -29,7 +29,7 @@ fun MovieCard(title: String, year: String, genre: String, @DrawableRes img: Int,
         modifier = if (expanded) {
             modifier.height(190.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
         } else {
-            modifier.height(220.dp).clip(RoundedCornerShape(8.dp)).clickable(onClick = { navigateToDetail() })
+            modifier.height(230.dp).clip(RoundedCornerShape(8.dp)).clickable(onClick = { navigateToDetail() })
         },
         verticalArrangement = Arrangement.spacedBy(1.dp),
         horizontalAlignment = Alignment.Start

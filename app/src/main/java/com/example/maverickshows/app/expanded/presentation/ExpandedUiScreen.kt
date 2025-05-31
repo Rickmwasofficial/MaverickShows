@@ -70,8 +70,8 @@ fun ExpandedScreen(
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(170.dp),
-                modifier = Modifier.fillMaxSize().padding(start = 35.dp, top = 25.dp),
+                columns = GridCells.Adaptive(110.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.spacedBy(1.dp),
             ) {

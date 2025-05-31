@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.maverickshows.app.actor.presentation.ActorUiScreen
 import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
@@ -62,6 +63,8 @@ data class Expanded(
 )
 @Serializable
 object Detail
+@Serializable
+object Actor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,7 +188,16 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             ExpandedScreen(title = route.title, navigateBack = { navController.popBackStack() })
         }
         composable<Detail> {
-            DetailUiScreen()
+            DetailUiScreen(
+                navigateToBack = { navController.popBackStack() },
+                navigateToActor = { navController.navigate(Actor) }
+            )
+        }
+        composable<Actor> {
+            ActorUiScreen(
+                navigateToBack = { navController.popBackStack() },
+                navigateToActor = { navController.navigate(Actor) }
+            )
         }
     }
 }
