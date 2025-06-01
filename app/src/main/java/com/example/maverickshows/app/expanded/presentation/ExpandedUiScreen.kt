@@ -4,18 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,14 +69,14 @@ fun ExpandedScreen(
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(110.dp),
-                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 10.dp),
+                columns = GridCells.Adaptive(120.dp),
+                modifier = Modifier.fillMaxHeight().padding(vertical = 10.dp).widthIn(max = 340.dp).align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.spacedBy(1.dp),
             ) {
                 repeat(60) {
                     item {
-                        MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, false, Modifier.padding(vertical = 5.dp, horizontal = 1.dp))
+                        MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, false, Modifier.padding(vertical = 5.dp, horizontal = 10.dp))
                     }
                 }
             }
