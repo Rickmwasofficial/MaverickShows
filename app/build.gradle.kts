@@ -5,7 +5,10 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("kotlinx-serialization")
 }
+
+android.buildFeatures.buildConfig = true
 
 android {
     namespace = "com.example.maverickshows"
@@ -73,34 +76,37 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Retrofit for networking
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Compose BOM - manages all Compose library versions
     val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
     implementation(composeBom)
 
-    // Gson for JSON parsing
-    implementation("com.google.code.gson:gson:2.10.1")
+    // Kotlin serialization with retrofit
+    implementation(libs.jakewharton.retrofit2.kotlinx.serialization.converter)
+
+    // Kotlinx Serialization JSON
+    implementation(libs.kotlinx.serialization.json.v162)
 
     // Coil for image loading in Compose
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.coil.compose)
 
     // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // Hilt Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // ViewModel Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Optional: Hilt ViewModel (if needed)
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
+    implementation(libs.androidx.hilt.lifecycle.viewmodel)
+    kapt(libs.androidx.hilt.compiler)
 }
