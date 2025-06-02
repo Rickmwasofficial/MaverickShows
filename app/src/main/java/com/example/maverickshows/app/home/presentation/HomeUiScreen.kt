@@ -46,6 +46,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                 MovieRow("For You", { navigateToExpanded("For You") }, { navigateToDetail() }, false)
             }
             item {
+                MovieRow("Now Playing", { navigateToExpanded("For You") }, { navigateToDetail() }, false)
+            }
+            item {
                 MovieRow("Popular Now", { navigateToExpanded("Popular Now") }, { navigateToDetail() }, true)
             }
             item {

@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -15,6 +17,10 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "TMDB_API", "\"${project.findProperty("TMDB_API")}\"")
+
+        // For manifest placeholders
+        manifestPlaceholders["TMDB_API"] = project.findProperty("TMDB_API") ?: ""
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -65,4 +71,36 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
+
+    // Retrofit for networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Compose BOM - manages all Compose library versions
+    val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
+    implementation(composeBom)
+
+    // Gson for JSON parsing
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Coil for image loading in Compose
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
+
+    // Hilt Navigation Compose
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // ViewModel Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // Optional: Hilt ViewModel (if needed)
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
 }

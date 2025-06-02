@@ -49,6 +49,7 @@ import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -66,6 +67,7 @@ object Detail
 @Serializable
 object Actor
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
