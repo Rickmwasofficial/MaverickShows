@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -82,7 +83,7 @@ fun SearchUiScreen(modifier: Modifier = Modifier) {
                 ) {
                     repeat(10) {
                         item {
-                            MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, false, navigateToDetail = { })
+                            MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), false, navigateToDetail = { })
                         }
                     }
                 }
@@ -133,7 +134,7 @@ fun SearchUiScreen(modifier: Modifier = Modifier) {
                             stringResource(R.string.movie_name),
                             "2019",
                             "Thriller",
-                            R.drawable.peaky,
+                            painterResource(R.drawable.peaky).toString(),
                             false,
                             Modifier.padding(vertical = 5.dp, horizontal = 10.dp)
                         )

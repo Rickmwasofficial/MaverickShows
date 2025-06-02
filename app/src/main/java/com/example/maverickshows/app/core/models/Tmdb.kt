@@ -13,6 +13,7 @@ data class AllTrending(
     val totalResults: Int
 )
 
+@Serializable
 data class TvData(
     val page: Int,
     val results: List<Tv>,
@@ -88,6 +89,7 @@ data class TvResults(
     val country: List<String>
 )
 
+@Serializable
 data class Tv(
     @SerialName("backdrop_path")
     val backgroundImg: String,

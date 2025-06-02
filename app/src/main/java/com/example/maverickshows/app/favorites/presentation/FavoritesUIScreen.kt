@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -115,7 +116,7 @@ fun FavoritesUiScreen(modifier: Modifier = Modifier) {
                             stringResource(R.string.movie_name),
                             "2019",
                             "Thriller",
-                            R.drawable.peaky,
+                            painterResource(R.drawable.peaky).toString(),
                             false,
                             Modifier.padding(vertical = 5.dp, horizontal = 10.dp)
                         )

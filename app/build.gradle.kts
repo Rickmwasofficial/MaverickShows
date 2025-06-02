@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
     id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin") // Ensure this is applied
     id("kotlinx-serialization")
 }
 
@@ -67,6 +67,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.activity.ktx)
 
     //navigation
     val navVersion = "2.9.0"
@@ -97,16 +99,13 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Dagger Hilt
+    // Ensure libs.hilt.android and libs.hilt.compiler use the exact same version
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    // Hilt Navigation Compose
+    // Hilt Navigation Compose - This is usually sufficient for ViewModel injection in Compose
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // ViewModel Compose
+    // ViewModel Compose - Good to keep for general ViewModel usage
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-    // Optional: Hilt ViewModel (if needed)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-    kapt(libs.androidx.hilt.compiler)
 }

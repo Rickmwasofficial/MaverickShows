@@ -8,19 +8,19 @@ class HomeDataRepositoryImpl(
     private val api: TmdbAPI
 ): HomeDataRep {
     override suspend fun getAllPopular(): List<HomeData> {
-        return api.getPopularTv().results.map {
+        return (api.getPopularTv().results.map {
             it.toHomeData()
         } + api.getPopularMovies().results.map {
             it.toHomeData()
-        }
+        }).shuffled()
     }
 
     override suspend fun getAllTopRated(): List<HomeData> {
-        return api.getTopRatedTv().results.map {
+        return (api.getTopRatedTv().results.map {
             it.toHomeData()
         } + api.getTopRatedMovies().results.map {
             it.toHomeData()
-        }
+        }).shuffled()
     }
 
     override suspend fun getTrendingMovies(): List<HomeData> {
@@ -84,10 +84,10 @@ class HomeDataRepositoryImpl(
     }
 
     override suspend fun getAllTrending(): List<HomeData> {
-        return api.getTrendingMovies().results.map {
+        return (api.getTrendingMovies().results.map {
             it.toHomeData()
         } + api.getTrendingTv().results.map {
             it.toHomeData()
-        }
+        }).shuffled()
     }
 }

@@ -58,7 +58,7 @@ fun DetailUiScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true, navigateBack = { navigateToBack() })
+//                TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true, navigateBack = { navigateToBack() })
             }
             item {
                 MovieDesc(stringResource(R.string.movie_description))
@@ -105,7 +105,7 @@ fun Trailers(modifier: Modifier = Modifier) {
         ) {
             repeat(10) {
                 item {
-                    MovieCard("Official Trailer Sn.1", "Jun 24", "2022", R.drawable.peaky, true)
+                    MovieCard("Official Trailer Sn.1", "Jun 24", "2022", painterResource(R.drawable.peaky).toString(), true)
                 }
             }
         }
@@ -222,7 +222,7 @@ fun MoreSuggestions(title: String, onClick: () -> Unit, expanded: Boolean, modif
         ) {
             repeat(10) {
                 item {
-                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, expanded)
+                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), expanded)
                 }
             }
         }

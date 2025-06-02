@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun ActorUiScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             item {
-                TopBox(R.drawable.peaky, R.string.movie_name, isActor = true, navigateBack = { navigateToBack() })
+//                TopBox(R.drawable.peaky, R.string.movie_name, isActor = true, navigateBack = { navigateToBack() })
             }
             item {
                 ActorDetails()
@@ -108,7 +109,7 @@ fun Filmography(title: String, onClick: () -> Unit, expanded: Boolean, modifier:
         ) {
             repeat(10) {
                 item {
-                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", R.drawable.peaky, expanded)
+                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), expanded)
                 }
             }
         }

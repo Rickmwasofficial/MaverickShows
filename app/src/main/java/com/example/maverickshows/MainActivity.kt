@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,6 +49,7 @@ import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
+import com.example.maverickshows.app.home.presentation.HomeViewModel
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -164,6 +167,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 @Composable
 fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+    val homeViewModel: HomeViewModel = hiltViewModel()
     NavHost(
         navController = navController,
         startDestination = Home,
@@ -176,7 +180,8 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
                 },
                 navigateToDetail = {
                     navController.navigate(Detail)
-                }
+                },
+                homeViewModel = homeViewModel
             )
         }
         composable<Search> {

@@ -31,27 +31,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.maverickshows.R
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
-fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
+fun TopBox(img: String, title: String, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
     val cats = listOf<String>("Horror", "Drama", "United States")
     Box(
         modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
     ) {
-        Image(
-            painter = painterResource(img),
-            contentDescription = stringResource(title),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://image.tmdb.org/t/p/original/$img")
+                .crossfade(true)
+                .build(),
+            contentDescription = title,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            alpha = 0.59f
+            alpha = 0.59f,
+            modifier = Modifier.fillMaxSize()
         )
         if (isFullDesc || isActor) {
             Row(
@@ -109,7 +115,7 @@ fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Mo
         ) {
             if (isFullDesc || isActor) {
                 Text(
-                    text = stringResource(title),
+                    text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White
@@ -146,10 +152,10 @@ fun TopBox(@DrawableRes img: Int, @StringRes title: Int, modifier: Modifier = Mo
     }
 }
 
-@Preview
-@Composable
-fun TopBoxPreview(){
-    MaverickShowsTheme {
-        TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true)
-    }
-}
+//@Preview
+//@Composable
+//fun TopBoxPreview(){
+//    MaverickShowsTheme {
+//        TopBox(R.drawable.peaky, R.string.movie_name, isFullDesc = true)
+//    }
+//}
