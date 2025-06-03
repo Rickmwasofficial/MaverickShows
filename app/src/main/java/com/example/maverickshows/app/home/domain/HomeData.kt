@@ -22,32 +22,32 @@ fun TvResults.toHomeData() = HomeData(
     id = id,
     name = name,
     title = null,
-    img = img,
-    img2 = backgroundImg,
-    releaseDate = firstAirDate.take(4),
-    genre = genres,
-    type = type
+    img = img?: "",
+    img2 = backgroundImg ?: "",
+    releaseDate = firstAirDate?.take(4) ?: "N/A",
+    genre = genres.orEmpty(),
+    type = type ?: "tv"
 )
 
 fun Results.toHomeData() = HomeData(
     id = id,
     name = null,
     title = title,
-    img = img,
-    img2 = backgroundImg,
-    releaseDate = released.take(4),
-    genre = genres,
-    type = type
+    img = img ?: "",
+    img2 = backgroundImg ?: "",
+    releaseDate = released?.take(4) ?: "N/A",
+    genre = genres.orEmpty(),
+    type = type ?: "unknown"
 )
 
 fun Tv.toHomeData() = HomeData(
     id = id,
     name = name,
     title = null,
-    img = img,
-    img2 = backgroundImg,
-    releaseDate = firstAirDate.take(4),
-    genre = genres,
+    img = img ?: "",
+    img2 = backgroundImg ?: "",
+    releaseDate = firstAirDate?.take(4) ?: "N/A",
+    genre = genres.orEmpty(),
     type = "tv"
 )
 
@@ -55,9 +55,9 @@ fun Movie.toHomeData() = HomeData(
     id = id,
     name = null,
     title = title,
-    img = img,
-    img2 = backgroundImg,
-    releaseDate = released.take(4),
-    genre = genres,
+    img = img ?: "",
+    img2 = backgroundImg ?: "",
+    releaseDate = released?.take(4) ?: "N/A",
+    genre = genres.orEmpty(),
     type = "movie"
 )

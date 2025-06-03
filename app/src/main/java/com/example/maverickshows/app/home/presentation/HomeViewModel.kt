@@ -28,10 +28,10 @@ class HomeViewModel @Inject constructor(
     var contentState: StateFlow<ContentUIState> = _contentState.asStateFlow()
 
     init {
-        loadAllData(contentState.value)
+        loadAllData(contentState.value, page = 1)
     }
 
-    fun loadAllData(state: ContentUIState) {
+    fun loadAllData(state: ContentUIState, page: Int) {
         viewModelScope.launch {
             try {
                 lateinit var trending: List<HomeData>
@@ -39,26 +39,36 @@ class HomeViewModel @Inject constructor(
                 lateinit var topRated: List<HomeData>
 
                 if (state is ContentUIState.All) {
-                    trending = homeDataRepositoryImpl.getAllTrending()
-                    popular = homeDataRepositoryImpl.getAllPopular()
-                    topRated = homeDataRepositoryImpl.getAllTopRated()
+                    trending = homeDataRepositoryImpl.getAllTrending(page = page.toString())
+                    popular = homeDataRepositoryImpl.getAllPopular(page = page.toString())
+                    topRated = homeDataRepositoryImpl.getAllTopRated(page = page.toString())
                 } else if (state is ContentUIState.Movie) {
-                    trending = homeDataRepositoryImpl.getTrendingMovies()
-                    popular = homeDataRepositoryImpl.getPopularMovies()
-                    topRated = homeDataRepositoryImpl.getTopRatedMovies()
+                    trending = homeDataRepositoryImpl.getTrendingMovies(page = page.toString())
+                    popular = homeDataRepositoryImpl.getPopularMovies(page = page.toString())
+                    topRated = homeDataRepositoryImpl.getTopRatedMovies(page = page.toString())
                 } else if (state is ContentUIState.Series) {
-                    trending = homeDataRepositoryImpl.getTrendingTv()
-                    popular = homeDataRepositoryImpl.getPopularTv()
-                    topRated = homeDataRepositoryImpl.getTopRatedTv()
+                    trending = homeDataRepositoryImpl.getTrendingTv(page = page.toString())
+                    popular = homeDataRepositoryImpl.getPopularTv(page = page.toString())
+                    topRated = homeDataRepositoryImpl.getTopRatedTv(page = page.toString())
                 }
 
                 val genres = homeDataRepositoryImpl.getAllGenres()
+                val upcoming = homeDataRepositoryImpl.getUpcomingMovies(page = page.toString())
+                val airing = homeDataRepositoryImpl.getAiringTv(page = page.toString())
+                val onair = homeDataRepositoryImpl.getOnAirTv(page = page.toString())
+                val nowPlaying = homeDataRepositoryImpl.getNowPlayingMovies(page = page.toString())
 
                 _uiState.value = HomeUIState.Success(
                     allPopular = popular,
                     allTrending = trending,
                     allTopRated = topRated,
-                    genres = genres
+                    genres = genres,
+                    nextPage = page + 1,
+                    upcomingMovies = upcoming,
+                    airingTv = airing,
+                    onAirTv = onair,
+                    nowPlaying = nowPlaying,
+                    isRefreshing = false
                 )
                 setHeroImage()
             } catch (e: Exception) {
@@ -69,7 +79,6 @@ class HomeViewModel @Inject constructor(
     private var heroImageLoopJob: Job? = null
     private fun setHeroImage() {
         heroImageLoopJob?.cancel()
-
         heroImageLoopJob = viewModelScope.launch {
             val initialState = _uiState.value
             if (initialState is HomeUIState.Success) {
@@ -85,6 +94,19 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+//
+//    fun getNextPage(page: Int) {
+//        loadAllData(contentState.value, page)
+//    }
+
+    fun refresh() {
+        val pages = listOf<Int>(1, 2, 3, 4, 5, 6, 7)
+        val currentState = _uiState.value as HomeUIState.Success
+        _uiState.value = currentState.copy(
+            isRefreshing = true
+        )
+        loadAllData(contentState.value, pages.random())
     }
 
     fun getStringGenre(genreIds: List<Int>): List<String> {
@@ -106,12 +128,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setContentState(state: String) {
+        val currentState = _uiState.value as HomeUIState.Success
         _contentState.value = when (state) {
             "All" -> ContentUIState.All
             "Movies" -> ContentUIState.Movie
             "Series" -> ContentUIState.Series
             else -> ContentUIState.All
         }
-        loadAllData(contentState.value)
+        loadAllData(contentState.value, currentState.nextPage - 1)
     }
 }

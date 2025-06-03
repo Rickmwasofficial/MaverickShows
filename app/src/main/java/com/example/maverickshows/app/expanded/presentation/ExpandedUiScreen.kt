@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -17,11 +18,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -41,6 +45,7 @@ import com.example.maverickshows.ui.theme.MaverickShowsTheme
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandedScreen(
     title: String,
@@ -81,20 +86,46 @@ fun ExpandedScreen(
             }
             when (uiState) {
                 is HomeUIState.Success -> {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(120.dp),
-                        modifier = Modifier.fillMaxHeight().padding(vertical = 10.dp).widthIn(max = 320.dp).align(Alignment.CenterHorizontally),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    PullToRefreshBox(
+                        isRefreshing = (uiState as HomeUIState.Success).isRefreshing,
+                        onRefresh = { homeViewModel.refresh() },
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        val data = when (title) {
-                            "Popular" -> (uiState as HomeUIState.Success).allPopular
-                            "Trending" -> (uiState as HomeUIState.Success).allTrending
-                            else -> (uiState as HomeUIState.Success).allTopRated
-                        }
-                        items(data.size) { num ->
-                            val genres = homeViewModel.getStringGenre(data[num].genre)
-                            MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], data[num].img, false, navigateToDetail = {  })
+                        Column {
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(150.dp),
+                                modifier = Modifier.fillMaxHeight().weight(1f).padding(20.dp)
+                                    .widthIn(max = 330.dp).align(Alignment.CenterHorizontally),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp),
+                            ) {
+                                val data = when (title) {
+                                    "Popular" -> (uiState as HomeUIState.Success).allPopular
+                                    "Trending" -> (uiState as HomeUIState.Success).allTrending
+                                    "Upcoming" -> (uiState as HomeUIState.Success).upcomingMovies
+                                    "Now Playing" -> (uiState as HomeUIState.Success).nowPlaying
+                                    "Airing Today" -> (uiState as HomeUIState.Success).airingTv
+                                    "On Air" -> (uiState as HomeUIState.Success).onAirTv
+                                    else -> (uiState as HomeUIState.Success).allTopRated
+                                }
+                                items(data.size) { num ->
+                                    val genres = homeViewModel.getStringGenre(data[num].genre)
+                                    MovieCard(
+                                        data[num].title ?: data[num].name.toString(),
+                                        data[num].releaseDate,
+                                        genres[0],
+                                        data[num].img,
+                                        false,
+                                        navigateToDetail = { })
+                                }
+                            }
+//                            Button(
+//                                onClick = { homeViewModel.getNextPage((uiState as HomeUIState.Success).nextPage) }
+//                            ) {
+//                                Text(
+//                                    "Load More"
+//                                )
+//                            }
                         }
                     }
                 }

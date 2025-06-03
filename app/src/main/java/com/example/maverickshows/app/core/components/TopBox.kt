@@ -122,7 +122,7 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                 )
             }
             LazyRow(
-                modifier = Modifier,
+                modifier = Modifier.padding(10.dp),
                 contentPadding = PaddingValues(vertical = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -132,7 +132,7 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                         modifier = Modifier.height(30.dp).padding(horizontal = 1.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0.3f, 0.3f, 0.3f, 0.6f),
-                            disabledContainerColor = Color(0.3f, 0.3f, 0.3f, 0.8f),
+                            disabledContainerColor = Color(0.3f, 0.3f, 0.3f, 0.5f),
                             contentColor = Color.White,
                             disabledContentColor = Color.White
                         ),

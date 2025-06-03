@@ -6,9 +6,15 @@ import com.example.maverickshows.app.home.domain.HomeData
 sealed interface HomeUIState {
     data class Success(
         val hero: Int = 0,
+        val nextPage: Int = 2,
         val allTrending: List<HomeData>,
         val allPopular: List<HomeData>,
         val allTopRated: List<HomeData>,
+        val upcomingMovies: List<HomeData>,
+        val airingTv: List<HomeData>,
+        val onAirTv: List<HomeData>,
+        val nowPlaying: List<HomeData>,
+        val isRefreshing: Boolean = false,
         val genres: List<Genre>
     ): HomeUIState
     object Loading: HomeUIState

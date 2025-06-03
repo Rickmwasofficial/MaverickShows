@@ -31,10 +31,10 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
         modifier = if (expanded) {
             modifier.height(190.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
         } else {
-            modifier.height(240.dp).clip(RoundedCornerShape(8.dp)).width(140.dp).clickable(onClick = { navigateToDetail() })
+            modifier.height(250.dp).clip(RoundedCornerShape(8.dp)).width(145.dp).clickable(onClick = { navigateToDetail() })
         },
-        verticalArrangement = Arrangement.spacedBy(1.dp),
-        horizontalAlignment = Alignment.Start
+        verticalArrangement = Arrangement.spacedBy(3.dp),
+        horizontalAlignment = Alignment.Start,
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -53,19 +53,23 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
                 ).clip(RoundedCornerShape(5.dp))
             }
         )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.ExtraBold,
-            maxLines = 1,
-            modifier = Modifier.padding(start = 1.dp)
-        )
-        Text(
-            text = "$year . $genre",
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 1.dp)
-        )
+        Column(
+            modifier = Modifier.padding(4.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                modifier = Modifier.padding(start = 1.dp)
+            )
+            Text(
+                text = "$year . $genre",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.padding(start = 1.dp)
+            )
+        }
     }
 }

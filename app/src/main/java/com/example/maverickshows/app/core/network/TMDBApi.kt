@@ -19,60 +19,62 @@ interface TmdbAPI {
 
     @GET("trending/movie/week")
     suspend fun getTrendingMovies(
-        @Query("language") lang: String = "en-US"
+        @Query("language") lang: String = "en-US",
+        @Query("page") page: String
     ): AllTrending
 
     @GET("trending/tv/week")
     suspend fun getTrendingTv(
-        @Query("language") lang: String = "en-US"
+        @Query("language") lang: String = "en-US",
+        @Query("page") page: String
     ): TrendingTv
 
     @GET("movie/now_playing")
     suspend fun getNowPlayingMovies(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): NowPlayingAndUpcomingMovies
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): PopularAndTopRatedMovies
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): PopularAndTopRatedMovies
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): NowPlayingAndUpcomingMovies
 
     @GET("tv/airing_today")
     suspend fun getAiringTodayTv(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): TvData
 
     @GET("tv/on_the_air")
     suspend fun getOnAirTv(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): TvData
 
     @GET("tv/popular")
     suspend fun getPopularTv(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): TvData
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTv(
         @Query("language") lang: String = "en-US",
-        @Query("page") page: String = "1"
+        @Query("page") page: String
     ): TvData
 
     @GET("genre/tv/list")

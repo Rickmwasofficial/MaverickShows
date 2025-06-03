@@ -49,6 +49,7 @@ import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.domain.HomeData
+import com.example.maverickshows.app.home.presentation.HomeUIState
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.home.presentation.HomeViewModel
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
@@ -81,7 +82,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             MaverickShowsTheme {
                 Scaffold(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     bottomBar = {
                         BottomNavigationBar(navController = navController)
                     },
@@ -120,7 +121,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Home",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.onSurface
+                        MaterialTheme.colorScheme.primary
                     } else {
                         Color.Gray
                     }
@@ -138,7 +139,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Search",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.onSurface
+                        MaterialTheme.colorScheme.primary
                     } else {
                         Color.Gray
                     }
@@ -156,7 +157,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     contentDescription = "Go to Favorites",
                     modifier = Modifier.size(27.dp),
                     tint = if (isSelected) {
-                        MaterialTheme.colorScheme.onSurface
+                        MaterialTheme.colorScheme.primary
                     } else {
                         Color.Gray
                     }

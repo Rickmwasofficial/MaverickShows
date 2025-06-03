@@ -4,18 +4,18 @@ import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.domain.HomeData
 
 interface HomeDataRep {
-    suspend fun getTrendingMovies(): List<HomeData>
-    suspend fun getTrendingTv(): List<HomeData>
-    suspend fun getPopularMovies(): List<HomeData>
-    suspend fun getUpcomingMovies(): List<HomeData>
-    suspend fun getTopRatedMovies(): List<HomeData>
-    suspend fun getNowPlayingMovies(): List<HomeData>
-    suspend fun getPopularTv(): List<HomeData>
-    suspend fun getTopRatedTv(): List<HomeData>
-    suspend fun getOnAirTv(): List<HomeData>
-    suspend fun getAiringTv(): List<HomeData>
-    suspend fun getAllTrending(): List<HomeData>
-    suspend fun getAllPopular(): List<HomeData>
-    suspend fun getAllTopRated(): List<HomeData>
+    suspend fun getTrendingMovies(page: String = "1"): List<HomeData>
+    suspend fun getTrendingTv(page: String = "1"): List<HomeData>
+    suspend fun getPopularMovies(page: String = "1"): List<HomeData>
+    suspend fun getUpcomingMovies(page: String = "1"): List<HomeData>
+    suspend fun getTopRatedMovies(page: String = "1"): List<HomeData>
+    suspend fun getNowPlayingMovies(page: String = "1"): List<HomeData>
+    suspend fun getPopularTv(page: String = "1"): List<HomeData>
+    suspend fun getTopRatedTv(page: String = "1"): List<HomeData>
+    suspend fun getOnAirTv(page: String = "1"): List<HomeData>
+    suspend fun getAiringTv(page: String = "1"): List<HomeData>
+    suspend fun getAllTrending(page: String = "1"): List<HomeData>
+    suspend fun getAllPopular(page: String = "1"): List<HomeData>
+    suspend fun getAllTopRated(page: String = "1"): List<HomeData>
     suspend fun getAllGenres(): List<Genre>
 }

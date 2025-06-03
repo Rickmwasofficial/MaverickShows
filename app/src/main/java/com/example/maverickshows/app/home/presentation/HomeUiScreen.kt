@@ -15,10 +15,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,49 +29,132 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.maverickshows.app.core.components.ContentLabel
+import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
 import com.example.maverickshows.app.home.domain.HomeData
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> Unit, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
     val uiState by homeViewModel.uiState.collectAsState()
     val contentState by homeViewModel.contentState.collectAsState()
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         when (uiState) {
             is HomeUIState.Success -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                PullToRefreshBox(
+                    isRefreshing = (uiState as HomeUIState.Success).isRefreshing,
+                    onRefresh = { homeViewModel.refresh() },
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    item {
-                        val idx = (uiState as HomeUIState.Success).hero
-                        val genres = homeViewModel.getStringGenre((uiState as HomeUIState.Success).allTrending[idx].genre)
-                        TopBox((uiState as HomeUIState.Success).allTrending[idx].img,
-                            ((uiState as HomeUIState.Success).allTrending[idx].title ?: (uiState as HomeUIState.Success).allTrending[0].name).toString(),
-                            cats = genres
-                        )
-                    }
-                    item {
-                        CategorySection(contentState, homeViewModel)
-                    }
-                    item {
-                        MovieRow("Popular", (uiState as HomeUIState.Success).allPopular, { navigateToExpanded("Popular") }, { navigateToDetail() }, false, homeViewModel)
-                    }
-                    item {
-                        MovieRow("Trending", (uiState as HomeUIState.Success).allTrending, { navigateToExpanded("Trending") }, { navigateToDetail() }, true, homeViewModel)
-                    }
-                    item {
-                        MovieRow("Top Rated", (uiState as HomeUIState.Success).allTopRated, { navigateToExpanded("Top Rated") }, { navigateToDetail() }, false, homeViewModel)
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        item {
+                            val idx = (uiState as HomeUIState.Success).hero
+                            val genres =
+                                homeViewModel.getStringGenre((uiState as HomeUIState.Success).allTrending[idx].genre)
+                            TopBox(
+                                (uiState as HomeUIState.Success).allTrending[idx].img,
+                                ((uiState as HomeUIState.Success).allTrending[idx].title
+                                    ?: (uiState as HomeUIState.Success).allTrending[0].name).toString(),
+                                cats = genres
+                            )
+                        }
+                        item {
+                            CategorySection(contentState, homeViewModel)
+                        }
+                        item {
+                            MovieRow(
+                                "Popular",
+                                (uiState as HomeUIState.Success).allPopular,
+                                { navigateToExpanded("Popular") },
+                                { navigateToDetail() },
+                                false,
+                                homeViewModel,
+                                Modifier.padding(5.dp)
+                            )
+                        }
+                        item {
+                            MovieRow(
+                                "Trending",
+                                (uiState as HomeUIState.Success).allTrending,
+                                { navigateToExpanded("Trending") },
+                                { navigateToDetail() },
+                                true,
+                                homeViewModel,
+                                Modifier.padding(5.dp)
+                            )
+                        }
+                        item {
+                            MovieRow(
+                                "Top Rated",
+                                (uiState as HomeUIState.Success).allTopRated,
+                                { navigateToExpanded("Top Rated") },
+                                { navigateToDetail() },
+                                false,
+                                homeViewModel,
+                                Modifier.padding(5.dp)
+                            )
+                        }
+                        if (contentState is ContentUIState.Movie || contentState is ContentUIState.All) {
+                            item {
+                                MovieRow(
+                                    "Upcoming",
+                                    (uiState as HomeUIState.Success).upcomingMovies,
+                                    { navigateToExpanded("Upcoming") },
+                                    { navigateToDetail() },
+                                    true,
+                                    homeViewModel,
+                                    Modifier.padding(5.dp)
+                                )
+                            }
+                            item {
+                                MovieRow(
+                                    "Now Playing",
+                                    (uiState as HomeUIState.Success).nowPlaying,
+                                    { navigateToExpanded("Now Playing") },
+                                    { navigateToDetail() },
+                                    false,
+                                    homeViewModel,
+                                    Modifier.padding(5.dp)
+                                )
+                            }
+                        }
+                        if (contentState is ContentUIState.Series || contentState is ContentUIState.All) {
+                            item {
+                                MovieRow(
+                                    "Airing Today",
+                                    (uiState as HomeUIState.Success).airingTv,
+                                    { navigateToExpanded("Airing Today") },
+                                    { navigateToDetail() },
+                                    true,
+                                    homeViewModel,
+                                    Modifier.padding(5.dp)
+                                )
+                            }
+                            item {
+                                MovieRow(
+                                    "On Air",
+                                    (uiState as HomeUIState.Success).onAirTv,
+                                    { navigateToExpanded("On Air") },
+                                    { navigateToDetail() },
+                                    false,
+                                    homeViewModel,
+                                    Modifier.padding(5.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
             is HomeUIState.Loading -> {
-                Text("Loading")
+                LoadingScreen("Fetching Data")
             }
             is HomeUIState.Error -> {
                 Column(
@@ -113,14 +198,14 @@ fun CategoryBtn(onClick: () -> Unit, isSelected: Boolean, text: String, modifier
             )
         } else {
             ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                contentColor = MaterialTheme.colorScheme.onSurface
             )
         }
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium,
         )
     }
 }
