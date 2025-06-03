@@ -16,3 +16,9 @@ sealed interface HomeUIState {
         val message: String
     ): HomeUIState
 }
+
+sealed interface ContentUIState {
+    object All: ContentUIState
+    object Movie: ContentUIState
+    object Series: ContentUIState
+}

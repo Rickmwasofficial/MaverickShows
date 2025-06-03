@@ -48,6 +48,7 @@ import com.example.maverickshows.app.actor.presentation.ActorUiScreen
 import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
+import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.home.presentation.HomeViewModel
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
@@ -192,7 +193,7 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
         }
         composable<Expanded> { backStackEntry ->
             val route = backStackEntry.toRoute<Expanded>()
-            ExpandedScreen(title = route.title, navigateBack = { navController.popBackStack() })
+            ExpandedScreen(title = route.title, homeViewModel = homeViewModel, navigateBack = { navController.popBackStack() })
         }
         composable<Detail> {
             DetailUiScreen(

@@ -8,6 +8,9 @@ import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.maverickshows.Home
+import com.example.maverickshows.app.home.domain.HomeData
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,22 +24,40 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
     private var _uiState = MutableStateFlow<HomeUIState>(HomeUIState.Loading)
     var uiState: StateFlow<HomeUIState> = _uiState.asStateFlow()
+    private var _contentState = MutableStateFlow<ContentUIState>(ContentUIState.All)
+    var contentState: StateFlow<ContentUIState> = _contentState.asStateFlow()
 
     init {
-        loadAllData()
+        loadAllData(contentState.value)
     }
 
-    fun loadAllData() {
+    fun loadAllData(state: ContentUIState) {
         viewModelScope.launch {
             try {
-                val allTrending = homeDataRepositoryImpl.getAllTrending()
-                val allPopular = homeDataRepositoryImpl.getAllPopular()
-                val allTopRated = homeDataRepositoryImpl.getAllTopRated()
+                lateinit var trending: List<HomeData>
+                lateinit var popular: List<HomeData>
+                lateinit var topRated: List<HomeData>
+
+                if (state is ContentUIState.All) {
+                    trending = homeDataRepositoryImpl.getAllTrending()
+                    popular = homeDataRepositoryImpl.getAllPopular()
+                    topRated = homeDataRepositoryImpl.getAllTopRated()
+                } else if (state is ContentUIState.Movie) {
+                    trending = homeDataRepositoryImpl.getTrendingMovies()
+                    popular = homeDataRepositoryImpl.getPopularMovies()
+                    topRated = homeDataRepositoryImpl.getTopRatedMovies()
+                } else if (state is ContentUIState.Series) {
+                    trending = homeDataRepositoryImpl.getTrendingTv()
+                    popular = homeDataRepositoryImpl.getPopularTv()
+                    topRated = homeDataRepositoryImpl.getTopRatedTv()
+                }
+
                 val genres = homeDataRepositoryImpl.getAllGenres()
+
                 _uiState.value = HomeUIState.Success(
-                    allPopular = allPopular,
-                    allTrending = allTrending,
-                    allTopRated = allTopRated,
+                    allPopular = popular,
+                    allTrending = trending,
+                    allTopRated = topRated,
                     genres = genres
                 )
                 setHeroImage()
@@ -45,17 +66,21 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+    private var heroImageLoopJob: Job? = null
     private fun setHeroImage() {
-        viewModelScope.launch {
-            if (_uiState.value is HomeUIState.Success) { // Check initial state
+        heroImageLoopJob?.cancel()
+
+        heroImageLoopJob = viewModelScope.launch {
+            val initialState = _uiState.value
+            if (initialState is HomeUIState.Success) {
                 while (true) {
                     delay(12000)
-                    if (_uiState.value is HomeUIState.Success) { // Re-check inside loop
-                        val currentState = _uiState.value as HomeUIState.Success
+                    val currentState = _uiState.value
+                    if (currentState is HomeUIState.Success && currentState.allTrending.isNotEmpty()) {
                         val nextHero = (currentState.hero + 1) % currentState.allTrending.size
                         _uiState.value = currentState.copy(hero = nextHero)
                     } else {
-                        break // Exit loop if state changes
+                        break
                     }
                 }
             }
@@ -78,5 +103,15 @@ class HomeViewModel @Inject constructor(
             }
         }
         return stringGenres
+    }
+
+    fun setContentState(state: String) {
+        _contentState.value = when (state) {
+            "All" -> ContentUIState.All
+            "Movies" -> ContentUIState.Movie
+            "Series" -> ContentUIState.Series
+            else -> ContentUIState.All
+        }
+        loadAllData(contentState.value)
     }
 }

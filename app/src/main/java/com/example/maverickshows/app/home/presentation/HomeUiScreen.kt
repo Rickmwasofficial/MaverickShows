@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,6 +34,7 @@ import com.example.maverickshows.app.home.domain.HomeData
 @Composable
 fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> Unit, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
     val uiState by homeViewModel.uiState.collectAsState()
+    val contentState by homeViewModel.contentState.collectAsState()
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -53,22 +55,16 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                         )
                     }
                     item {
-                        CategorySection()
-                    }
-//                    item {
-//                        MovieRow("For You", { navigateToExpanded("For You") }, { navigateToDetail() }, false)
-//                    }
-                    item {
-                        MovieRow("Popular", (uiState as HomeUIState.Success).allPopular, { navigateToExpanded("For You") }, { navigateToDetail() }, false, homeViewModel)
-                    }
-//                    item {
-//                        MovieRow("Popular Now", { navigateToExpanded("Popular Now") }, { navigateToDetail() }, true)
-//                    }
-                    item {
-                        MovieRow("Trending", (uiState as HomeUIState.Success).allTrending, { navigateToExpanded("Top Rated") }, { navigateToDetail() }, true, homeViewModel)
+                        CategorySection(contentState, homeViewModel)
                     }
                     item {
-                        MovieRow("Top Rated", (uiState as HomeUIState.Success).allTopRated, { navigateToExpanded("Upcoming") }, { navigateToDetail() }, false, homeViewModel)
+                        MovieRow("Popular", (uiState as HomeUIState.Success).allPopular, { navigateToExpanded("Popular") }, { navigateToDetail() }, false, homeViewModel)
+                    }
+                    item {
+                        MovieRow("Trending", (uiState as HomeUIState.Success).allTrending, { navigateToExpanded("Trending") }, { navigateToDetail() }, true, homeViewModel)
+                    }
+                    item {
+                        MovieRow("Top Rated", (uiState as HomeUIState.Success).allTopRated, { navigateToExpanded("Top Rated") }, { navigateToDetail() }, false, homeViewModel)
                     }
                 }
             }
@@ -104,12 +100,23 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
 }
 
 @Composable
-fun CategoryBtn(onClick: () -> Unit, text: String, modifier: Modifier = Modifier) {
+fun CategoryBtn(onClick: () -> Unit, isSelected: Boolean, text: String, modifier: Modifier = Modifier) {
     Button(
         onClick = { onClick() },
         modifier = modifier.padding(horizontal = 1.dp).size(30.dp),
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(2.dp),
+        colors = if (isSelected) {
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        } else {
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
     ) {
         Text(
             text = text,
@@ -119,15 +126,22 @@ fun CategoryBtn(onClick: () -> Unit, text: String, modifier: Modifier = Modifier
 }
 
 @Composable
-fun CategorySection(modifier: Modifier = Modifier) {
-    val cats = listOf<String>("All", "Movies", "Series", "Animations")
+fun CategorySection(contentUIState: ContentUIState, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
+    val cats = listOf<String>("All", "Movies", "Series")
     Row(
         modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         repeat(cats.size) { iter ->
-            CategoryBtn({  }, cats[iter], modifier.weight(1f))
+            if (contentUIState is ContentUIState.All) {
+                CategoryBtn({ homeViewModel.setContentState(cats[iter]) }, cats[iter] == "All", cats[iter], modifier.weight(1f))
+            } else if (contentUIState is ContentUIState.Series) {
+                CategoryBtn({ homeViewModel.setContentState(cats[iter]) }, cats[iter] == "Series", cats[iter], modifier.weight(1f))
+            } else {
+                CategoryBtn({ homeViewModel.setContentState(cats[iter]) }, cats[iter] == "Movies", cats[iter], modifier.weight(1f))
+
+            }
         }
     }
 }
