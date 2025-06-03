@@ -44,20 +44,20 @@ import com.example.maverickshows.R
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
-fun TopBox(img: String, title: String, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
-    val cats = listOf<String>("Horror", "Drama", "United States")
+fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
     Box(
         modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/original/$img")
+                .data("https://image.tmdb.org/t/p/w780/$img")
                 .crossfade(true)
+                .crossfade(1000)
                 .build(),
             contentDescription = title,
             contentScale = ContentScale.Crop,
             alpha = 0.59f,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
         if (isFullDesc || isActor) {
             Row(

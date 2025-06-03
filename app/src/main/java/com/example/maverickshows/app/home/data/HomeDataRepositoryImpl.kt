@@ -1,5 +1,7 @@
 package com.example.maverickshows.app.home.data
 
+import com.example.maverickshows.app.core.models.Genre
+import com.example.maverickshows.app.core.models.Genres
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.domain.toHomeData
@@ -89,5 +91,9 @@ class HomeDataRepositoryImpl(
         } + api.getTrendingTv().results.map {
             it.toHomeData()
         }).shuffled()
+    }
+
+    override suspend fun getAllGenres(): List<Genre> {
+        return api.getTvGenres().genres + api.getMovieGenres().genres
     }
 }

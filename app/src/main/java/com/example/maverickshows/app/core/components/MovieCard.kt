@@ -49,7 +49,7 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
                 ).fillMaxWidth().clip(RoundedCornerShape(5.dp))
             } else {
                 Modifier.height(
-                    190.dp
+                    205.dp
                 ).clip(RoundedCornerShape(5.dp))
             }
         )

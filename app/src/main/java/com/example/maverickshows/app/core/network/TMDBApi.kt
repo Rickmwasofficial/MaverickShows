@@ -2,6 +2,8 @@ package com.example.maverickshows.app.core.network
 
 import com.example.maverickshows.BuildConfig
 import com.example.maverickshows.app.core.models.AllTrending
+import com.example.maverickshows.app.core.models.Genre
+import com.example.maverickshows.app.core.models.Genres
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
 import com.example.maverickshows.app.core.models.TrendingTv
@@ -72,4 +74,14 @@ interface TmdbAPI {
         @Query("language") lang: String = "en-US",
         @Query("page") page: String = "1"
     ): TvData
+
+    @GET("genre/tv/list")
+    suspend fun getTvGenres(
+        @Query("language") lang: String = "en"
+    ): Genres
+
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres(
+        @Query("language") lang: String = "en"
+    ): Genres
 }

@@ -1,5 +1,6 @@
 package com.example.maverickshows.app.home.data
 
+import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.domain.HomeData
 
 interface HomeDataRep {
@@ -16,4 +17,5 @@ interface HomeDataRep {
     suspend fun getAllTrending(): List<HomeData>
     suspend fun getAllPopular(): List<HomeData>
     suspend fun getAllTopRated(): List<HomeData>
+    suspend fun getAllGenres(): List<Genre>
 }

@@ -1,14 +1,13 @@
 package com.example.maverickshows.app.core.di
 
-import com.example.maverickshows.BuildConfig
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

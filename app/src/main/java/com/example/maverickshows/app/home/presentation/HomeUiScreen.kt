@@ -20,17 +20,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.style.TextAlign
 import com.example.maverickshows.app.home.domain.HomeData
 
 @Composable
@@ -48,8 +45,11 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                     verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
                     item {
-                        TopBox((uiState as HomeUIState.Success).allTrending[0].img2,
-                            ((uiState as HomeUIState.Success).allTrending[0].title ?: (uiState as HomeUIState.Success).allTrending[0].name).toString()
+                        val idx = (uiState as HomeUIState.Success).hero
+                        val genres = homeViewModel.getStringGenre((uiState as HomeUIState.Success).allTrending[idx].genre)
+                        TopBox((uiState as HomeUIState.Success).allTrending[idx].img,
+                            ((uiState as HomeUIState.Success).allTrending[idx].title ?: (uiState as HomeUIState.Success).allTrending[0].name).toString(),
+                            cats = genres
                         )
                     }
                     item {
@@ -59,16 +59,16 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
 //                        MovieRow("For You", { navigateToExpanded("For You") }, { navigateToDetail() }, false)
 //                    }
                     item {
-                        MovieRow("Popular", (uiState as HomeUIState.Success).allPopular, { navigateToExpanded("For You") }, { navigateToDetail() }, false)
+                        MovieRow("Popular", (uiState as HomeUIState.Success).allPopular, { navigateToExpanded("For You") }, { navigateToDetail() }, false, homeViewModel)
                     }
 //                    item {
 //                        MovieRow("Popular Now", { navigateToExpanded("Popular Now") }, { navigateToDetail() }, true)
 //                    }
                     item {
-                        MovieRow("Trending", (uiState as HomeUIState.Success).allTrending, { navigateToExpanded("Top Rated") }, { navigateToDetail() }, true)
+                        MovieRow("Trending", (uiState as HomeUIState.Success).allTrending, { navigateToExpanded("Top Rated") }, { navigateToDetail() }, true, homeViewModel)
                     }
                     item {
-                        MovieRow("Top Rated", (uiState as HomeUIState.Success).allTopRated, { navigateToExpanded("Upcoming") }, { navigateToDetail() }, false)
+                        MovieRow("Top Rated", (uiState as HomeUIState.Success).allTopRated, { navigateToExpanded("Upcoming") }, { navigateToDetail() }, false, homeViewModel)
                     }
                 }
             }
@@ -133,7 +133,7 @@ fun CategorySection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateToDetail: () -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
+fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateToDetail: () -> Unit, expanded: Boolean, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -145,7 +145,8 @@ fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateT
             contentPadding = PaddingValues(1.dp)
         ) {
             items(data.size) { num ->
-                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, "Thriller", if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail() })
+                val genres = homeViewModel.getStringGenre(data[num].genre)
+                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail() })
             }
         }
     }

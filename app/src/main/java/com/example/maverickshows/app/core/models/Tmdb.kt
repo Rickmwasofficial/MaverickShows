@@ -14,6 +14,17 @@ data class AllTrending(
 )
 
 @Serializable
+data class Genres(
+    val genres: List<Genre>
+)
+
+@Serializable
+data class Genre(
+    val id: Int,
+    val name: String
+)
+
+@Serializable
 data class TvData(
     val page: Int,
     val results: List<Tv>,

@@ -14,7 +14,7 @@ data class HomeData(
     val img: String,
     val img2: String,
     val releaseDate: String,
-    val genre: Int,
+    val genre: List<Int>,
     val type: String
 )
 
@@ -25,7 +25,7 @@ fun TvResults.toHomeData() = HomeData(
     img = img,
     img2 = backgroundImg,
     releaseDate = firstAirDate.take(4),
-    genre = genres[0],
+    genre = genres,
     type = type
 )
 
@@ -36,7 +36,7 @@ fun Results.toHomeData() = HomeData(
     img = img,
     img2 = backgroundImg,
     releaseDate = released.take(4),
-    genre = genres[0],
+    genre = genres,
     type = type
 )
 
@@ -47,7 +47,7 @@ fun Tv.toHomeData() = HomeData(
     img = img,
     img2 = backgroundImg,
     releaseDate = firstAirDate.take(4),
-    genre = genres[0],
+    genre = genres,
     type = "tv"
 )
 
@@ -58,6 +58,6 @@ fun Movie.toHomeData() = HomeData(
     img = img,
     img2 = backgroundImg,
     releaseDate = released.take(4),
-    genre = genres[0],
+    genre = genres,
     type = "movie"
 )
