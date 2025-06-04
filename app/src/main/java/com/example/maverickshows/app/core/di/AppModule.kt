@@ -2,6 +2,23 @@ package com.example.maverickshows.app.core.di
 
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
+import com.example.maverickshows.app.home.domain.GetAllGenres
+import com.example.maverickshows.app.home.domain.GetAllPopular
+import com.example.maverickshows.app.home.domain.GetAllTopRated
+import com.example.maverickshows.app.home.domain.GetAllTrending
+import com.example.maverickshows.app.home.domain.GetHomeContentUseCase
+import com.example.maverickshows.app.home.domain.GetMovieNowPlaying
+import com.example.maverickshows.app.home.domain.GetMoviePopular
+import com.example.maverickshows.app.home.domain.GetMovieTopRated
+import com.example.maverickshows.app.home.domain.GetMovieTrending
+import com.example.maverickshows.app.home.domain.GetMovieUpcoming
+import com.example.maverickshows.app.home.domain.GetTvAiring
+import com.example.maverickshows.app.home.domain.GetTvOnAir
+import com.example.maverickshows.app.home.domain.GetTvPopular
+import com.example.maverickshows.app.home.domain.GetTvTopRated
+import com.example.maverickshows.app.home.domain.GetTvTrending
+import com.example.maverickshows.app.home.domain.HomeUseCases
+import com.example.maverickshows.app.home.domain.RefreshUseCase
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -48,8 +65,6 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(apiKeyInterceptor: Interceptor): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            // Set level to BODY for full request/response logging (useful for debugging)
-            // In production, consider changing to NONE or BASIC for security/performance
             level = HttpLoggingInterceptor.Level.BODY
         }
 
@@ -79,5 +94,38 @@ object AppModule {
     @Singleton
     fun provideHomeDataImpl(api: TmdbAPI): HomeDataRepositoryImpl {
         return HomeDataRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeUseCases(repositoryImpl: HomeDataRepositoryImpl): HomeUseCases {
+        return HomeUseCases(
+            getAllTrending = GetAllTrending(repositoryImpl),
+            getAllPopular = GetAllPopular(repositoryImpl),
+            getAllTopRated = GetAllTopRated(repositoryImpl),
+            getMoviePopular = GetMoviePopular(repositoryImpl),
+            getMovieTopRated = GetMovieTopRated(repositoryImpl),
+            getMovieTrending = GetMovieTrending(repositoryImpl),
+            getMovieUpcoming = GetMovieUpcoming(repositoryImpl),
+            getMovieNowPlaying = GetMovieNowPlaying(repositoryImpl),
+            getTvTrending = GetTvTrending(repositoryImpl),
+            getTvPopular = GetTvPopular(repositoryImpl),
+            getTvTopRated = GetTvTopRated(repositoryImpl),
+            getAllGenres = GetAllGenres(repositoryImpl),
+            getTvAiring = GetTvAiring(repositoryImpl),
+            getTvOnAir = GetTvOnAir(repositoryImpl)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeContentUseCase(homeUseCases: HomeUseCases): GetHomeContentUseCase {
+        return GetHomeContentUseCase(homeUseCases)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefreshUseCase(getHomeContentUseCase: GetHomeContentUseCase): RefreshUseCase {
+        return RefreshUseCase(getHomeContentUseCase)
     }
 }

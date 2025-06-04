@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.MovieCard
-import com.example.maverickshows.app.core.components.TopBox
 import com.example.maverickshows.app.details.presentation.CastCard
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 

@@ -1,8 +1,5 @@
 package com.example.maverickshows.app.core.components
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,16 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.maverickshows.R
-import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
 fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {

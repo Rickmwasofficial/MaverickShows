@@ -1,8 +1,6 @@
 package com.example.maverickshows.app.core.network
 
-import com.example.maverickshows.BuildConfig
 import com.example.maverickshows.app.core.models.AllTrending
-import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.Genres
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies

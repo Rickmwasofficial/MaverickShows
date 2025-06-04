@@ -22,8 +22,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +37,7 @@ import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
 import com.example.maverickshows.app.home.domain.HomeData
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +61,13 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                         verticalArrangement = Arrangement.spacedBy(15.dp)
                     ) {
                         item {
-                            val idx = (uiState as HomeUIState.Success).hero
+                            var idx by remember { mutableIntStateOf(0) }
+                            LaunchedEffect(Unit) {
+                                while (true) {
+                                    delay(12000)
+                                    idx = (idx + 1) % (uiState as HomeUIState.Success).allTrending.size
+                                }
+                            }
                             val genres =
                                 homeViewModel.getStringGenre((uiState as HomeUIState.Success).allTrending[idx].genre)
                             TopBox(
