@@ -36,16 +36,24 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }) {
+fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }, popularity: Double = 0.0, avg: Double = 0.0) {
     Box(
         modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/w780/$img")
-                .crossfade(true)
-                .crossfade(1000)
-                .build(),
+            model = if (isFullDesc || isActor) {
+                ImageRequest.Builder(LocalContext.current)
+                    .data("https://image.tmdb.org/t/p/w780/$img")
+                    .crossfade(true)
+                    .crossfade(1000)
+                    .build()
+            } else {
+                ImageRequest.Builder(LocalContext.current)
+                    .data("https://image.tmdb.org/t/p/original/$img")
+                    .crossfade(true)
+                    .crossfade(1000)
+                    .build()
+            },
             contentDescription = title,
             contentScale = ContentScale.Crop,
             alpha = 0.59f,
@@ -77,7 +85,7 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                             shape = RoundedCornerShape(5.dp),
                         ) {
                             Text(
-                                text = "6.1",
+                                text = popularity.toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.ExtraBold,
                                 textAlign = TextAlign.Center,
@@ -89,7 +97,7 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                             shape = RoundedCornerShape(5.dp)
                         ) {
                             Text(
-                                text = "IMDb 6.4",
+                                text = avg.toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.ExtraBold,
                                 textAlign = TextAlign.Center,
@@ -108,13 +116,14 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
             if (isFullDesc || isActor) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
+                    textAlign = TextAlign.Center,
                     color = Color.White
                 )
             }
             LazyRow(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(bottom = 10.dp),
                 contentPadding = PaddingValues(vertical = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {

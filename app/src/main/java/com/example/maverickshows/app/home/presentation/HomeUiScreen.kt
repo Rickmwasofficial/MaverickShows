@@ -41,7 +41,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> Unit, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: (String, String) -> Unit, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
     val uiState by homeViewModel.uiState.collectAsState()
     val contentState by homeViewModel.contentState.collectAsState()
     Surface(
@@ -85,7 +85,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                 "Popular",
                                 (uiState as HomeUIState.Success).allPopular,
                                 { navigateToExpanded("Popular") },
-                                { navigateToDetail() },
+                                { id: String, type: String ->
+                                    navigateToDetail(id, type)
+                                },
                                 false,
                                 homeViewModel,
                                 Modifier.padding(5.dp)
@@ -96,7 +98,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                 "Trending",
                                 (uiState as HomeUIState.Success).allTrending,
                                 { navigateToExpanded("Trending") },
-                                { navigateToDetail() },
+                                { id: String, type: String ->
+                                    navigateToDetail(id, type)
+                                },
                                 true,
                                 homeViewModel,
                                 Modifier.padding(5.dp)
@@ -107,7 +111,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                 "Top Rated",
                                 (uiState as HomeUIState.Success).allTopRated,
                                 { navigateToExpanded("Top Rated") },
-                                { navigateToDetail() },
+                                { id: String, type: String ->
+                                    navigateToDetail(id, type)
+                                },
                                 false,
                                 homeViewModel,
                                 Modifier.padding(5.dp)
@@ -119,7 +125,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                     "Upcoming",
                                     (uiState as HomeUIState.Success).upcomingMovies,
                                     { navigateToExpanded("Upcoming") },
-                                    { navigateToDetail() },
+                                    { id: String, type: String ->
+                                        navigateToDetail(id, type)
+                                    },
                                     true,
                                     homeViewModel,
                                     Modifier.padding(5.dp)
@@ -130,7 +138,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                     "Now Playing",
                                     (uiState as HomeUIState.Success).nowPlaying,
                                     { navigateToExpanded("Now Playing") },
-                                    { navigateToDetail() },
+                                    { id: String, type: String ->
+                                        navigateToDetail(id, type)
+                                    },
                                     false,
                                     homeViewModel,
                                     Modifier.padding(5.dp)
@@ -143,7 +153,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                     "Airing Today",
                                     (uiState as HomeUIState.Success).airingTv,
                                     { navigateToExpanded("Airing Today") },
-                                    { navigateToDetail() },
+                                    { id: String, type: String ->
+                                        navigateToDetail(id, type)
+                                    },
                                     true,
                                     homeViewModel,
                                     Modifier.padding(5.dp)
@@ -154,7 +166,9 @@ fun HomeUiScreen(navigateToExpanded: (String) -> Unit, navigateToDetail: () -> U
                                     "On Air",
                                     (uiState as HomeUIState.Success).onAirTv,
                                     { navigateToExpanded("On Air") },
-                                    { navigateToDetail() },
+                                    { id: String, type: String ->
+                                        navigateToDetail(id, type)
+                                    },
                                     false,
                                     homeViewModel,
                                     Modifier.padding(5.dp)
@@ -243,7 +257,7 @@ fun CategorySection(contentUIState: ContentUIState, homeViewModel: HomeViewModel
 }
 
 @Composable
-fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateToDetail: () -> Unit, expanded: Boolean, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateToDetail: (String, String) -> Unit, expanded: Boolean, homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -256,7 +270,7 @@ fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateT
         ) {
             items(data.size) { num ->
                 val genres = homeViewModel.getStringGenre(data[num].genre)
-                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail() })
+                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
             }
         }
     }

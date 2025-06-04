@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.maverickshows.app.actor.presentation.ActorUiScreen
 import com.example.maverickshows.app.details.presentation.DetailUiScreen
+import com.example.maverickshows.app.details.presentation.DetailViewModel
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
@@ -58,7 +59,10 @@ data class Expanded(
     val title: String
 )
 @Serializable
-object Detail
+data class Detail(
+    val id: String,
+    val type: String = "movie"
+)
 @Serializable
 object Actor
 
@@ -170,8 +174,8 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
                 navigateToExpanded = { title: String ->
                     navController.navigate(Expanded(title))
                 },
-                navigateToDetail = {
-                    navController.navigate(Detail)
+                navigateToDetail = { id: String, type: String ->
+                    navController.navigate(Detail(id, type))
                 },
                 homeViewModel = homeViewModel
             )
@@ -186,10 +190,15 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             val route = backStackEntry.toRoute<Expanded>()
             ExpandedScreen(title = route.title, homeViewModel = homeViewModel, navigateBack = { navController.popBackStack() })
         }
-        composable<Detail> {
+        composable<Detail> { backStackEntry ->
+            val route = backStackEntry.toRoute<Detail>()
+            val detailViewModel: DetailViewModel = hiltViewModel()
             DetailUiScreen(
+                id = route.id,
+                type = route.type,
                 navigateToBack = { navController.popBackStack() },
-                navigateToActor = { navController.navigate(Actor) }
+                navigateToActor = { navController.navigate(Actor) },
+                detailViewModel = detailViewModel
             )
         }
         composable<Actor> {

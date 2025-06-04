@@ -1,6 +1,7 @@
 package com.example.maverickshows.app.core.di
 
 import com.example.maverickshows.app.core.network.TmdbAPI
+import com.example.maverickshows.app.details.data.DetailDataRepImpl
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.GetAllGenres
 import com.example.maverickshows.app.home.domain.GetAllPopular
@@ -94,6 +95,12 @@ object AppModule {
     @Singleton
     fun provideHomeDataImpl(api: TmdbAPI): HomeDataRepositoryImpl {
         return HomeDataRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailDataImpl(api: TmdbAPI): DetailDataRepImpl {
+        return DetailDataRepImpl(api)
     }
 
     @Provides

@@ -9,7 +9,7 @@ data class MovieDetails(
     @SerialName("backdrop_path")
     val backgroundImg: String?,
     @SerialName("belongs_to_collection")
-    val collection: String?,
+    val collection: Collection?,
     val budget: Int,
     val genres: List<Genre>,
     val homepage: String,
@@ -17,7 +17,7 @@ data class MovieDetails(
     @SerialName("imdb_id")
     val imdbId: String,
     @SerialName("origin_country")
-    val country: String?,
+    val country: List<String>,
     @SerialName("original_language")
     val language: String?,
     @SerialName("original_title")
@@ -33,7 +33,7 @@ data class MovieDetails(
     @SerialName("release_date")
     val date: String,
     val revenue: Int,
-    val runtime: Int,
+    val runtime: Int?,
     @SerialName("spoken_languages")
     val languages: List<Language>,
     val status: String,
@@ -47,6 +47,16 @@ data class MovieDetails(
 )
 
 @Serializable
+data class Collection(
+    val id: Int,
+    val name: String,
+    @SerialName("poster_path")
+    val img: String?,
+    @SerialName("backdrop_path")
+    val backgroundImg: String?,
+)
+
+@Serializable
 data class TvDetails(
     val adult: Boolean = true,
     @SerialName("backdrop_path")
@@ -54,9 +64,9 @@ data class TvDetails(
     @SerialName("created_by")
     val creators: List<Creator>,
     @SerialName("episode_run_time")
-    val runtime: List<Int>,
+    val runtime: List<Int>?,
     @SerialName("first_air_date")
-    val firstDate: String,
+    val firstDate: String?,
     val genres: List<Genre>,
     val homepage: String,
     val id: Int,
@@ -64,12 +74,12 @@ data class TvDetails(
     val inProduction: Boolean,
     val languages: List<String>,
     @SerialName("last_air_date")
-    val lastDate: String,
+    val lastDate: String?,
     @SerialName("last_episode_to_air")
-    val lastEpisode: Episode,
+    val lastEpisode: Episode?,
     val name: String?,
     @SerialName("next_episode_to_air")
-    val nextEpisode: Episode,
+    val nextEpisode: Episode?,
     val networks: List<Companies>,
     @SerialName("number_of_episodes")
     val numEpisodes: Int,
@@ -135,7 +145,7 @@ data class Episode(
     val type: String,
     @SerialName("production_code")
     val production: String,
-    val runtime: Int,
+    val runtime: Int?,
     @SerialName("season_number")
     val season: Int,
     @SerialName("show_id")
@@ -170,15 +180,15 @@ data class Language(
 data class Companies(
     val id: Int,
     @SerialName("logo_path")
-    val logo: String,
-    val name: String,
+    val logo: String?,
+    val name: String?,
     @SerialName("origin_country")
-    val country: String
+    val country: String?
 )
 
 @Serializable
 data class ProductionCountries(
     @SerialName("iso_3166_1")
     val id: String,
-    val name: String
+    val name: String?
 )

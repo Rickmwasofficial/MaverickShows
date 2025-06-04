@@ -25,7 +25,7 @@ import coil.request.ImageRequest
 fun MovieCard(title: String, year: String, genre: String, img: String, expanded: Boolean, modifier: Modifier = Modifier, navigateToDetail: () -> Unit = { }) {
     Column(
         modifier = if (expanded) {
-            modifier.height(190.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
+            modifier.height(200.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
         } else {
             modifier.height(250.dp).clip(RoundedCornerShape(8.dp)).width(145.dp).clickable(onClick = { navigateToDetail() })
         },
