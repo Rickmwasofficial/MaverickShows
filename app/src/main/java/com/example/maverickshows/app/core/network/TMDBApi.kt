@@ -2,11 +2,14 @@ package com.example.maverickshows.app.core.network
 
 import com.example.maverickshows.app.core.models.AllTrending
 import com.example.maverickshows.app.core.models.Genres
+import com.example.maverickshows.app.core.models.MovieDetails
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
 import com.example.maverickshows.app.core.models.TrendingTv
 import com.example.maverickshows.app.core.models.TvData
+import com.example.maverickshows.app.core.models.TvDetails
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbAPI {
@@ -84,4 +87,16 @@ interface TmdbAPI {
     suspend fun getMovieGenres(
         @Query("language") lang: String = "en"
     ): Genres
+
+    @GET("movie/{movieId}")
+    suspend fun getMovieDetails(
+        @Path("movieId") id: String,
+        @Query("language") lang: String = "en"
+    ): MovieDetails
+
+    @GET("tv/{seriesId}")
+    suspend fun getTvDetails(
+        @Path("seriesId") id: String,
+        @Query("language") lang: String = "en"
+    ): TvDetails
 }
