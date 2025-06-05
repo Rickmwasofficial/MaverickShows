@@ -70,7 +70,7 @@ fun DetailUiScreen(
     id: String,
     type: String,
     navigateToBack: () -> Unit,
-    navigateToActor: () -> Unit,
+    navigateToActor: (String) -> Unit,
     navigateToDetail: (String, String) -> Unit,
     detailViewModel: DetailViewModel,
     modifier: Modifier = Modifier
@@ -120,7 +120,7 @@ fun DetailUiScreen(
                         Ratings((uiState as DetailUiState.Success).data)
                     }
                     item {
-                        CastAndCrew((uiState as DetailUiState.Success).credits, navigateToActor = { navigateToActor() })
+                        CastAndCrew((uiState as DetailUiState.Success).credits, navigateToActor = { id: String -> navigateToActor(id) })
                     }
                     item {
                         Companies((uiState as DetailUiState.Success).data)
@@ -397,7 +397,7 @@ fun CastCard(name: String, role: String, department: String, img: String,
 }
 
 @Composable
-fun CastAndCrew(data: List<DetailCredits>, navigateToActor: () -> Unit, modifier: Modifier= Modifier) {
+fun CastAndCrew(data: List<DetailCredits>, navigateToActor: (String) -> Unit, modifier: Modifier= Modifier) {
     Column(
         modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -410,7 +410,7 @@ fun CastAndCrew(data: List<DetailCredits>, navigateToActor: () -> Unit, modifier
         ) {
             items(data.size) { num ->
                 CastCard(data[num].name, data[num].role, data[num].department,
-                    data[num].profile.toString(), { navigateToActor() }, Modifier.weight(1f))
+                    data[num].profile.toString(), { navigateToActor(data[num].id.toString()) }, Modifier.weight(1f))
             }
         }
     }

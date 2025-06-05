@@ -37,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.maverickshows.app.actor.presentation.ActorUiScreen
+import com.example.maverickshows.app.actor.presentation.ActorViewModel
 import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.details.presentation.DetailViewModel
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
@@ -64,7 +65,9 @@ data class Detail(
     val type: String = "movie"
 )
 @Serializable
-object Actor
+data class Actor(
+    val id: String
+)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -199,17 +202,21 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
                 id = route.id,
                 type = route.type,
                 navigateToBack = { navController.popBackStack() },
-                navigateToActor = { navController.navigate(Actor) },
+                navigateToActor = { id: String -> navController.navigate(Actor(id)) },
                 navigateToDetail = { id: String, type: String ->
                     navController.navigate(Detail(id, type))
                 },
                 detailViewModel = detailViewModel
             )
         }
-        composable<Actor> {
+        composable<Actor> { backStackEntry ->
+            val route = backStackEntry.toRoute<Actor>()
+            val actorViewModel = hiltViewModel<ActorViewModel>()
             ActorUiScreen(
+                id = route.id,
                 navigateToBack = { navController.popBackStack() },
-                navigateToActor = { navController.navigate(Actor) }
+                navigateToActor = { id: String -> navController.navigate(Actor(id)) },
+                actorViewModel = actorViewModel
             )
         }
     }

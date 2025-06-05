@@ -1,5 +1,6 @@
 package com.example.maverickshows.app.core.di
 
+import com.example.maverickshows.app.actor.data.ActorDataRepImpl
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
@@ -101,6 +102,12 @@ object AppModule {
     @Singleton
     fun provideDetailDataImpl(api: TmdbAPI): DetailDataRepImpl {
         return DetailDataRepImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActorDataImpl(api: TmdbAPI): ActorDataRepImpl {
+        return ActorDataRepImpl(api)
     }
 
     @Provides

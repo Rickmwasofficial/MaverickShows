@@ -1,5 +1,7 @@
 package com.example.maverickshows.app.core.network
 
+import com.example.maverickshows.app.core.models.Actor
+import com.example.maverickshows.app.core.models.ActorImages
 import com.example.maverickshows.app.core.models.AllTrending
 import com.example.maverickshows.app.core.models.Credits
 import com.example.maverickshows.app.core.models.Genres
@@ -133,4 +135,14 @@ interface TmdbAPI {
     suspend fun getMovieRecommendations(
         @Path("movieId") id: String
     ): AllTrending
+
+    @GET("person/{personId}")
+    suspend fun getPersonDetails(
+        @Path("personId") id: String
+    ): Actor
+
+    @GET("person/{personId}/images")
+    suspend fun getActorImages(
+        @Path("personId") id: String
+    ): ActorImages
 }
