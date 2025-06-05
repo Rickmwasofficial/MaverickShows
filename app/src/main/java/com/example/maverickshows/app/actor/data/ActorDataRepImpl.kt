@@ -40,7 +40,7 @@ class ActorDataRepImpl(
     }
 
     override suspend fun getGenres(): List<Genre> {
-        return (api.getTvGenres().genres.filter { it.id != null && it.name.isNotBlank() } +
-                api.getMovieGenres().genres.filter { it.id != null && it.name.isNotBlank() })
+        return (api.getTvGenres().genres.filter { it.name.isNotBlank() } +
+                api.getMovieGenres().genres.filter { it.name.isNotBlank() })
     }
 }

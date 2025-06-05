@@ -211,7 +211,8 @@ fun Filmography(title: String, data: List<FilmographyData>, actorViewModel: Acto
         ) {
             items(data.size) { num ->
                 val genres = actorViewModel.getStringGenre(data[num].genre)
-                MovieCard(data[num].title.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
+                MovieCard(data[num].title.toString(), data[num].releaseDate.take(4),
+                    genres.getOrNull(0).toString(), if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
             }
         }
     }

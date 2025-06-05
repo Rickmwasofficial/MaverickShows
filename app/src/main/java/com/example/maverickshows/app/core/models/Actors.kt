@@ -59,6 +59,8 @@ data class MovieCast(
     @SerialName("release_date")
     val released: String?, // Made nullable
     val video: Boolean,
+    @SerialName("first_credit_air_date")
+    val firstCreditAirDate: String? = "Null",
     @SerialName("vote_average")
     val votesAvg: Double,
     @SerialName("vote_count")
@@ -91,6 +93,8 @@ data class MovieCrew(
     val video: Boolean,
     @SerialName("vote_average")
     val votesAvg: Double,
+    @SerialName("first_credit_air_date")
+    val firstCreditAirDate: String? = "Null",
     @SerialName("vote_count")
     val votes: Int,
     @SerialName("credit_id")
@@ -124,7 +128,9 @@ data class TvCast(
     val genres: List<Int>?, // Made nullable
     val popularity: Double,
     @SerialName("first_air_date")
-    val firstAirDate: String?, // Made nullable
+    val firstAirDate: String?,
+    @SerialName("first_credit_air_date")
+    val firstCreditAirDate: String? = "Null",
     @SerialName("vote_average")
     val votesAvg: Double,
     @SerialName("vote_count")
@@ -135,7 +141,7 @@ data class TvCast(
     @SerialName("credit_id")
     val credit: String?,
     @SerialName("episode_count")
-    val episodes: Int
+    val episodes: Int? = 0
 )
 
 @Serializable
@@ -143,6 +149,8 @@ data class TvCrew(
     @SerialName("backdrop_path")
     val backgroundImg: String?, // Made nullable
     val id: Int,
+    @SerialName("first_credit_air_date")
+    val firstCreditAirDate: String? = "Null",
     val name: String?, // Made nullable
     @SerialName("original_name")
     val name2: String?, // Made nullable
@@ -166,7 +174,7 @@ data class TvCrew(
     @SerialName("credit_id")
     val credit: String?,
     @SerialName("episode_count")
-    val episodes: Int,
+    val episodes: Int? = 0,
     val department: String?,
     val job: String?
 )
