@@ -7,12 +7,14 @@ import com.example.maverickshows.app.core.models.Credits
 import com.example.maverickshows.app.core.models.Genres
 import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.MovieDetails
+import com.example.maverickshows.app.core.models.MovieFilmography
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
 import com.example.maverickshows.app.core.models.Results
 import com.example.maverickshows.app.core.models.TrendingTv
 import com.example.maverickshows.app.core.models.TvData
 import com.example.maverickshows.app.core.models.TvDetails
+import com.example.maverickshows.app.core.models.TvFilmography
 import com.example.maverickshows.app.core.models.TvResults
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -145,4 +147,14 @@ interface TmdbAPI {
     suspend fun getActorImages(
         @Path("personId") id: String
     ): ActorImages
+
+    @GET("person/{personId}/movie_credits")
+    suspend fun getMovieFilmography(
+        @Path("personId") id: String
+    ): MovieFilmography
+
+    @GET("person/{personId}/tv_credits")
+    suspend fun getTvFilmography(
+        @Path("personId") id: String
+    ): TvFilmography
 }

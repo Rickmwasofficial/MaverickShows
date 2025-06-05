@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.maverickshows.R
 import com.example.maverickshows.app.actor.domain.ActorData
+import com.example.maverickshows.app.actor.domain.FilmographyData
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
@@ -51,7 +52,7 @@ import com.example.maverickshows.ui.theme.MaverickShowsTheme
 fun ActorUiScreen(
     id: String,
     navigateToBack: () -> Unit,
-    navigateToActor: (String) -> Unit,
+    navigateToDetail: (String, String) -> Unit,
     actorViewModel: ActorViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -83,7 +84,9 @@ fun ActorUiScreen(
                         ActorImageRows((uiState as ActorUiState.Success).img)
                     }
                     item {
-                        Filmography("Filmography", { }, false)
+                        Filmography("Filmography", (uiState as ActorUiState.Success).filmographyData, actorViewModel, { id: String, type: String ->
+                            navigateToDetail(id, type)
+                        }, false)
                     }
                 }
             }
@@ -195,21 +198,20 @@ fun ActorDetails(data: ActorData, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Filmography(title: String, onClick: () -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
+fun Filmography(title: String, data: List<FilmographyData>, actorViewModel: ActorViewModel, navigateToDetail: (String, String) -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth().padding(start = 5.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        ContentLabel(title, { onClick() })
+        ContentLabel(title, { })
         LazyRow(
             modifier = Modifier.padding(start = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(1.dp)
         ) {
-            repeat(10) {
-                item {
-                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), expanded)
-                }
+            items(data.size) { num ->
+                val genres = actorViewModel.getStringGenre(data[num].genre)
+                MovieCard(data[num].title.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
             }
         }
     }

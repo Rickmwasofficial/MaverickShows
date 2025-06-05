@@ -214,8 +214,9 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             val actorViewModel = hiltViewModel<ActorViewModel>()
             ActorUiScreen(
                 id = route.id,
-                navigateToBack = { navController.popBackStack() },
-                navigateToActor = { id: String -> navController.navigate(Actor(id)) },
+                navigateToBack = { navController.popBackStack() },navigateToDetail = { id: String, type: String ->
+                    navController.navigate(Detail(id, type))
+                },
                 actorViewModel = actorViewModel
             )
         }
