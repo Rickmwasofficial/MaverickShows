@@ -22,8 +22,16 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val results = detailDataRepImpl.getMovieDetail(id)
+                val img = detailDataRepImpl.getMovieImages(id)
+                val credits = detailDataRepImpl.getMovieCredits(id)
+                val recommend = detailDataRepImpl.getMovieRecommendations(id)
+                val genres = detailDataRepImpl.getGenres()
                 _uiState.value = DetailUiState.Success(
-                    data = results
+                    data = results,
+                    imgData = img,
+                    credits = credits,
+                    recommendations = recommend,
+                    genres = genres
                 )
             } catch (e: Exception) {
                 _uiState.value = DetailUiState.Error(e.message.toString())
@@ -35,8 +43,16 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val results = detailDataRepImpl.getTvDetail(id)
+                val img = detailDataRepImpl.getTvImages(id)
+                val credits = detailDataRepImpl.getTvCredits(id)
+                val recommend = detailDataRepImpl.getTvRecommendations(id)
+                val genres = detailDataRepImpl.getGenres()
                 _uiState.value = DetailUiState.Success(
-                    data = results
+                    data = results,
+                    imgData = img,
+                    credits = credits,
+                    recommendations = recommend,
+                    genres = genres
                 )
             } catch (e: Exception) {
                 _uiState.value = DetailUiState.Error(e.message.toString())
@@ -49,7 +65,7 @@ class DetailViewModel @Inject constructor(
         if (_uiState.value is DetailUiState.Success) {
             val currentState = _uiState.value as DetailUiState.Success
             for (genreId in genreIds) {
-                for (genre in currentState.data.genres) {
+                for (genre in currentState.genres) {
                     if (genre.id == genreId) {
                         stringGenres.add(genre.name)
                         break

@@ -10,20 +10,20 @@ data class MovieDetails(
     val backgroundImg: String?,
     @SerialName("belongs_to_collection")
     val collection: Collection?,
-    val budget: Int,
+    val budget: Int?,
     val genres: List<Genre>,
-    val homepage: String,
+    val homepage: String?,
     val id: Int,
     @SerialName("imdb_id")
-    val imdbId: String,
+    val imdbId: String?,
     @SerialName("origin_country")
-    val country: List<String>,
+    val country: List<String> = listOf<String>(),
     @SerialName("original_language")
     val language: String?,
     @SerialName("original_title")
     val title2: String?,
     val overview: String,
-    val popularity: Double,
+    val popularity: Double?,
     @SerialName("poster_path")
     val img: String?,
     @SerialName("production_companies")
@@ -31,19 +31,19 @@ data class MovieDetails(
     @SerialName("production_countries")
     val countries: List<ProductionCountries>,
     @SerialName("release_date")
-    val date: String,
-    val revenue: Int,
+    val date: String?,
+    val revenue: Int?,
     val runtime: Int?,
     @SerialName("spoken_languages")
     val languages: List<Language>,
-    val status: String,
+    val status: String?,
     val tagline: String?,
     val title: String?,
-    val video: Boolean,
+    val video: Boolean = false,
     @SerialName("vote_average")
-    val avg: Double,
+    val avg: Double?,
     @SerialName("vote_count")
-    val count: Int
+    val count: Int?
 )
 
 @Serializable
@@ -68,10 +68,10 @@ data class TvDetails(
     @SerialName("first_air_date")
     val firstDate: String?,
     val genres: List<Genre>,
-    val homepage: String,
+    val homepage: String?,
     val id: Int,
     @SerialName("in_production")
-    val inProduction: Boolean,
+    val inProduction: Boolean = true,
     val languages: List<String>,
     @SerialName("last_air_date")
     val lastDate: String?,
@@ -82,9 +82,9 @@ data class TvDetails(
     val nextEpisode: Episode?,
     val networks: List<Companies>,
     @SerialName("number_of_episodes")
-    val numEpisodes: Int,
+    val numEpisodes: Int?,
     @SerialName("number_of_seasons")
-    val numSeasons: Int,
+    val numSeasons: Int?,
     @SerialName("origin_country")
     val country: List<String>,
     @SerialName("original_language")
@@ -92,7 +92,7 @@ data class TvDetails(
     @SerialName("original_name")
     val name2: String?,
     val overview: String,
-    val popularity: Double,
+    val popularity: Double?,
     @SerialName("poster_path")
     val img: String?,
     @SerialName("production_companies")
@@ -102,30 +102,30 @@ data class TvDetails(
     val seasons: List<Season>,
     @SerialName("spoken_languages")
     val spokenLanguages: List<Language>,
-    val status: String,
+    val status: String?,
     val tagline: String?,
-    val type: String,
+    val type: String?,
     @SerialName("vote_average")
-    val avg: Double,
+    val avg: Double?,
     @SerialName("vote_count")
-    val count: Int
+    val count: Int?
 )
 
 @Serializable
 data class Season(
     @SerialName("air_date")
-    val date: String,
+    val date: String?,
     @SerialName("episode_count")
-    val episodes: Int,
+    val episodes: Int?,
     val id: Int,
-    val name: String,
-    val overview: String,
+    val name: String?,
+    val overview: String?,
     @SerialName("poster_path")
     val img: String?,
     @SerialName("season_number")
     val season: Int,
     @SerialName("vote_average")
-    val avg: Double
+    val avg: Double?
 )
 
 @Serializable
@@ -138,16 +138,16 @@ data class Episode(
     @SerialName("vote_count")
     val count: Int,
     @SerialName("air_date")
-    val date: String,
+    val date: String?,
     @SerialName("episode_number")
-    val number: Int,
+    val number: Int?,
     @SerialName("episode_type")
-    val type: String,
+    val type: String?,
     @SerialName("production_code")
-    val production: String,
+    val production: String?,
     val runtime: Int?,
     @SerialName("season_number")
-    val season: Int,
+    val season: Int?,
     @SerialName("show_id")
     val showId: Int,
     @SerialName("still_path")
@@ -191,4 +191,75 @@ data class ProductionCountries(
     @SerialName("iso_3166_1")
     val id: String,
     val name: String?
+)
+
+@Serializable
+data class ImageData(
+    val backdrops: List<Backdrop>,
+    val id: Int,
+    val logos: List<Backdrop>,
+    val posters: List<Backdrop>
+)
+
+@Serializable
+data class Backdrop(
+    @SerialName("aspect_ratio")
+    val aspect: Double?,
+    val height: Int?,
+    @SerialName("iso_639_1")
+    val iso: String?,
+    @SerialName("file_path")
+    val path: String,
+    @SerialName("vote_average")
+    val avg: Double?,
+    @SerialName("vote_count")
+    val count: Int?,
+    val width: Int?
+)
+
+@Serializable
+data class Credits(
+    val id: Int,
+    val cast: List<Cast>,
+    val crew: List<Crew>
+)
+
+@Serializable
+data class Cast(
+    val adult: Boolean = true,
+    val gender: Int,
+    val id: Int,
+    @SerialName("known_for_department")
+    val department: String?,
+    val name: String,
+    @SerialName("original_name")
+    val name2: String,
+    val popularity: Double?,
+    @SerialName("profile_path")
+    val profile: String?,
+    @SerialName("cast_id")
+    val castId: Int? = 0,
+    val character: String,
+    @SerialName("credit_id")
+    val creditId: String?,
+    val order: Int
+)
+
+@Serializable
+data class Crew(
+    val adult: Boolean = true,
+    val gender: Int,
+    val id: Int,
+    @SerialName("known_for_department")
+    val department1: String?,
+    val name: String,
+    @SerialName("original_name")
+    val name2: String,
+    val popularity: Double?,
+    @SerialName("profile_path")
+    val profile: String?,
+    @SerialName("credit_id")
+    val creditId: String?,
+    val department: String?,
+    val job: String?
 )

@@ -43,6 +43,7 @@ fun ExpandedScreen(
     title: String,
     homeViewModel: HomeViewModel,
     navigateBack: () -> Unit,
+    navigateToDetail: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
@@ -108,7 +109,7 @@ fun ExpandedScreen(
                                         genres[0],
                                         data[num].img,
                                         false,
-                                        navigateToDetail = { })
+                                        navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
                                 }
                             }
 //                            Button(

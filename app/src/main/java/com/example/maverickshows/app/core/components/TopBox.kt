@@ -109,7 +109,7 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
             }
         }
         Column(
-            modifier = Modifier.align(alignment = Alignment.BottomCenter),
+            modifier = Modifier.align(alignment = Alignment.BottomCenter).padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

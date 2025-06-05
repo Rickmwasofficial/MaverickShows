@@ -1,13 +1,17 @@
 package com.example.maverickshows.app.core.network
 
 import com.example.maverickshows.app.core.models.AllTrending
+import com.example.maverickshows.app.core.models.Credits
 import com.example.maverickshows.app.core.models.Genres
+import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.MovieDetails
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
+import com.example.maverickshows.app.core.models.Results
 import com.example.maverickshows.app.core.models.TrendingTv
 import com.example.maverickshows.app.core.models.TvData
 import com.example.maverickshows.app.core.models.TvDetails
+import com.example.maverickshows.app.core.models.TvResults
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -99,4 +103,34 @@ interface TmdbAPI {
         @Path("seriesId") id: String,
         @Query("language") lang: String = "en"
     ): TvDetails
+
+    @GET("tv/{seriesId}/images")
+    suspend fun getTvImages(
+        @Path("seriesId") id: String
+    ): ImageData
+
+    @GET("movie/{movieId}/images")
+    suspend fun getMovieImages(
+        @Path("movieId") id: String
+    ): ImageData
+
+    @GET("tv/{seriesId}/credits")
+    suspend fun getTvCredits(
+        @Path("seriesId") id: String
+    ): Credits
+
+    @GET("movie/{movieId}/credits")
+    suspend fun getMovieCredits(
+        @Path("movieId") id: String
+    ): Credits
+
+    @GET("tv/{seriesId}/recommendations")
+    suspend fun getTvRecommendations(
+        @Path("seriesId") id: String
+    ): TrendingTv
+
+    @GET("movie/{movieId}/recommendations")
+    suspend fun getMovieRecommendations(
+        @Path("movieId") id: String
+    ): AllTrending
 }

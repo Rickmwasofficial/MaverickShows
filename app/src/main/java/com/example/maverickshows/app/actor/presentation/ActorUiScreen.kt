@@ -128,9 +128,9 @@ fun SimilarPersonalities(navigateToActor: () -> Unit, modifier: Modifier = Modif
             modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(200.dp),
         ) {
             repeat(20) {
-                item {
-                    CastCard("Erick Mwangi", "Actor", R.drawable.peaky, { navigateToActor() }, Modifier.weight(1f))
-                }
+//                item {
+//                    CastCard("Erick Mwangi", "Actor", R.drawable.peaky, { navigateToActor() }, Modifier.weight(1f))
+//                }
             }
         }
     }

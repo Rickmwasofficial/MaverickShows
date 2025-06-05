@@ -3,6 +3,7 @@ package com.example.maverickshows.app.core.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,12 +21,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.maverickshows.app.core.models.ImageData
 
 @Composable
-fun MovieCard(title: String, year: String, genre: String, img: String, expanded: Boolean, modifier: Modifier = Modifier, navigateToDetail: () -> Unit = { }) {
+fun MovieCard(title: String, year: String, genre: String, img: String, expanded: Boolean, modifier: Modifier = Modifier, navigateToDetail: () -> Unit = { }, isImageData: Boolean = false) {
     Column(
         modifier = if (expanded) {
-            modifier.height(200.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
+            if (!isImageData) {
+                modifier.height(200.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
+            } else {
+                modifier.height(160.dp).clip(RoundedCornerShape(8.dp)).width(250.dp).clickable(onClick = { navigateToDetail() })
+            }
         } else {
             modifier.height(250.dp).clip(RoundedCornerShape(8.dp)).width(145.dp).clickable(onClick = { navigateToDetail() })
         },
@@ -40,32 +46,38 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
             contentDescription = title,
             contentScale = ContentScale.Crop,
             modifier = if (expanded) {
-                Modifier.height(
-                    150.dp
-                ).fillMaxWidth().clip(RoundedCornerShape(5.dp))
+                if (!isImageData) {
+                    Modifier.height(
+                        150.dp
+                    ).fillMaxWidth().clip(RoundedCornerShape(5.dp))
+                } else {
+                    Modifier.fillMaxSize().clip(RoundedCornerShape(5.dp))
+                }
             } else {
                 Modifier.height(
                     205.dp
                 ).clip(RoundedCornerShape(5.dp))
             }
         )
-        Column(
-            modifier = Modifier.padding(4.dp)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.ExtraBold,
-                maxLines = 1,
-                modifier = Modifier.padding(start = 1.dp)
-            )
-            Text(
-                text = "$year . $genre",
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(start = 1.dp)
-            )
+        if (!isImageData) {
+            Column(
+                modifier = Modifier.padding(4.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = 1,
+                    modifier = Modifier.padding(start = 1.dp)
+                )
+                Text(
+                    text = "$year . $genre",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(start = 1.dp)
+                )
+            }
         }
     }
 }

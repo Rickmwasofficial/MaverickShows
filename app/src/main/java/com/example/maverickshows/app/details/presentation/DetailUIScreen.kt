@@ -58,7 +58,10 @@ import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
 import com.example.maverickshows.app.core.models.Genre
+import com.example.maverickshows.app.core.models.ImageData
+import com.example.maverickshows.app.details.domain.DetailCredits
 import com.example.maverickshows.app.details.domain.DetailData
+import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.presentation.HomeUIState
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
@@ -68,6 +71,7 @@ fun DetailUiScreen(
     type: String,
     navigateToBack: () -> Unit,
     navigateToActor: () -> Unit,
+    navigateToDetail: (String, String) -> Unit,
     detailViewModel: DetailViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -97,8 +101,8 @@ fun DetailUiScreen(
                         }
                         TopBox((uiState as DetailUiState.Success).data.bg.toString(),
                             (uiState as DetailUiState.Success).data.title.toString(), genres, isFullDesc = true, navigateBack = { navigateToBack() },
-                            popularity = (uiState as DetailUiState.Success).data.popularity,
-                            avg = (uiState as DetailUiState.Success).data.avg)
+                            popularity = (uiState as DetailUiState.Success).data.popularity!!,
+                            avg = (uiState as DetailUiState.Success).data.avg!!)
                     }
                     item {
                         RuntimeLang((uiState as DetailUiState.Success).data)
@@ -110,16 +114,23 @@ fun DetailUiScreen(
                         Dates((uiState as DetailUiState.Success).data)
                     }
                     item {
-                        Companies((uiState as DetailUiState.Success).data)
+                        ImageRows((uiState as DetailUiState.Success).imgData)
                     }
                     item {
                         Ratings((uiState as DetailUiState.Success).data)
                     }
                     item {
-                        CastAndCrew(navigateToActor = { navigateToActor() })
+                        CastAndCrew((uiState as DetailUiState.Success).credits, navigateToActor = { navigateToActor() })
                     }
                     item {
-                        MoreSuggestions("You may also like", { }, false)
+                        Companies((uiState as DetailUiState.Success).data)
+                    }
+                    if ((uiState as DetailUiState.Success).recommendations.isNotEmpty()) {
+                        item {
+                            MoreSuggestions("You may also like", (uiState as DetailUiState.Success).recommendations, detailViewModel, { id: String, type: String ->
+                                navigateToDetail(id, type)
+                            }, false)
+                        }
                     }
                 }
             }
@@ -199,7 +210,7 @@ fun Companies(data: DetailData, modifier: Modifier = Modifier) {
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Box(
-                            modifier = Modifier.size(65.dp).clip(CircleShape).background(
+                            modifier = Modifier.size(45.dp).clip(CircleShape).background(
                                 MaterialTheme.colorScheme.onSurfaceVariant)
                         ) {
                             AsyncImage(
@@ -214,7 +225,7 @@ fun Companies(data: DetailData, modifier: Modifier = Modifier) {
                         }
                         Text(
                             text = data.companies[num].name.toString(),
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             maxLines = 2
@@ -322,17 +333,46 @@ fun RuntimeLang(data: DetailData, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CastCard(name: String, title: String, @DrawableRes img: Int,
+fun ImageRows(data: ImageData, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth().padding(start = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            text = "Images",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Justify
+        )
+
+        LazyRow(
+            modifier = Modifier.padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(1.dp)
+        ) {
+            items(data.backdrops.size) { num ->
+                MovieCard("", "", "", data.backdrops[num].path, true, navigateToDetail = { }, isImageData = true)
+            }
+        }
+    }
+}
+
+@Composable
+fun CastCard(name: String, role: String, department: String, img: String,
              navigateToActor: () -> Unit, modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.height(80.dp).width(200.dp).background(Color.Transparent, RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp)).padding(vertical = 5.dp).clickable(onClick = { navigateToActor() }),
+        modifier = modifier.height(60.dp).width(250.dp).background(Color.Transparent, RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp)).padding(vertical = 5.dp).clickable(onClick = { navigateToActor() }),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
-            painter = painterResource(img),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://image.tmdb.org/t/p/w500/${img}")
+                .build(),
             contentDescription = name,
-            modifier = Modifier.fillMaxHeight().clip(RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp))
+            contentScale = ContentScale.Crop,
+            alpha = 1f,
+            modifier = Modifier.fillMaxHeight().width(60.dp).clip(RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp)),
         )
         Column(
             modifier = Modifier.weight(1f).fillMaxHeight(),
@@ -345,7 +385,11 @@ fun CastCard(name: String, title: String, @DrawableRes img: Int,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = title,
+                text = role,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = department,
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -353,42 +397,40 @@ fun CastCard(name: String, title: String, @DrawableRes img: Int,
 }
 
 @Composable
-fun CastAndCrew(navigateToActor: () -> Unit, modifier: Modifier= Modifier) {
+fun CastAndCrew(data: List<DetailCredits>, navigateToActor: () -> Unit, modifier: Modifier= Modifier) {
     Column(
         modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         ContentLabel("Cast & Crew", { })
         LazyHorizontalGrid(
-            rows = GridCells.Adaptive(50.dp),
+            rows = GridCells.Adaptive(80.dp),
             contentPadding = PaddingValues(5.dp),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(150.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(250.dp),
         ) {
-            repeat(20) {
-                item {
-                    CastCard("Erick Mwangi", "Actor", R.drawable.peaky, { navigateToActor() }, Modifier.weight(1f))
-                }
+            items(data.size) { num ->
+                CastCard(data[num].name, data[num].role, data[num].department,
+                    data[num].profile.toString(), { navigateToActor() }, Modifier.weight(1f))
             }
         }
     }
 }
 
 @Composable
-fun MoreSuggestions(title: String, onClick: () -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
+fun MoreSuggestions(title: String, data: List<HomeData>, detailViewModel: DetailViewModel, navigateToDetail: (String, String) -> Unit, expanded: Boolean, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth().padding(start = 10.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        ContentLabel(title, { onClick() })
+        ContentLabel(title, { })
         LazyRow(
             modifier = Modifier.padding(start = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(1.dp)
         ) {
-            repeat(10) {
-                item {
-                    MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), expanded)
-                }
+            items(data.size) { num ->
+                val genres = detailViewModel.getStringGenre(data[num].genre)
+                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
             }
         }
     }

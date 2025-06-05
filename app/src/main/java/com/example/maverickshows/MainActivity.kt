@@ -188,7 +188,9 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
         }
         composable<Expanded> { backStackEntry ->
             val route = backStackEntry.toRoute<Expanded>()
-            ExpandedScreen(title = route.title, homeViewModel = homeViewModel, navigateBack = { navController.popBackStack() })
+            ExpandedScreen(title = route.title, homeViewModel = homeViewModel, navigateBack = { navController.popBackStack() }, navigateToDetail = { id: String, type: String ->
+                navController.navigate(Detail(id, type))
+            },)
         }
         composable<Detail> { backStackEntry ->
             val route = backStackEntry.toRoute<Detail>()
@@ -198,6 +200,9 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
                 type = route.type,
                 navigateToBack = { navController.popBackStack() },
                 navigateToActor = { navController.navigate(Actor) },
+                navigateToDetail = { id: String, type: String ->
+                    navController.navigate(Detail(id, type))
+                },
                 detailViewModel = detailViewModel
             )
         }
