@@ -6,7 +6,6 @@ import com.example.maverickshows.app.actor.domain.toActorData
 import com.example.maverickshows.app.actor.domain.toFilmography
 import com.example.maverickshows.app.core.models.ActorImages
 import com.example.maverickshows.app.core.models.Genre
-import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.network.TmdbAPI
 
 class ActorDataRepImpl(

@@ -2,8 +2,8 @@ package com.example.maverickshows.app.details.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maverickshows.app.details.data.DetailDataRepImpl
-import com.example.maverickshows.app.home.presentation.HomeUIState
+import com.example.maverickshows.app.details.domain.ShowData
+import com.example.maverickshows.app.details.domain.ShowDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,46 +13,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val detailDataRepImpl: DetailDataRepImpl
+    private val showDetail: ShowDetail
 ): ViewModel() {
     private var _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
-    fun getMovieDetails(id: String) {
+    fun getDetails(id: String, type: String) {
         viewModelScope.launch {
             try {
-                val results = detailDataRepImpl.getMovieDetail(id)
-                val img = detailDataRepImpl.getMovieImages(id)
-                val credits = detailDataRepImpl.getMovieCredits(id)
-                val recommend = detailDataRepImpl.getMovieRecommendations(id)
-                val genres = detailDataRepImpl.getGenres()
+                val data: ShowData = showDetail(id, type)
                 _uiState.value = DetailUiState.Success(
-                    data = results,
-                    imgData = img,
-                    credits = credits,
-                    recommendations = recommend,
-                    genres = genres
-                )
-            } catch (e: Exception) {
-                _uiState.value = DetailUiState.Error(e.message.toString())
-            }
-        }
-    }
-
-    fun getTvDetails(id: String) {
-        viewModelScope.launch {
-            try {
-                val results = detailDataRepImpl.getTvDetail(id)
-                val img = detailDataRepImpl.getTvImages(id)
-                val credits = detailDataRepImpl.getTvCredits(id)
-                val recommend = detailDataRepImpl.getTvRecommendations(id)
-                val genres = detailDataRepImpl.getGenres()
-                _uiState.value = DetailUiState.Success(
-                    data = results,
-                    imgData = img,
-                    credits = credits,
-                    recommendations = recommend,
-                    genres = genres
+                    data = data.details,
+                    imgData = data.images,
+                    credits = data.credits,
+                    recommendations = data.recommendations,
+                    genres = data.genres
                 )
             } catch (e: Exception) {
                 _uiState.value = DetailUiState.Error(e.message.toString())

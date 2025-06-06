@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.maverickshows.app.core.models.ImageData
 
 @Composable
 fun MovieCard(title: String, year: String, genre: String, img: String, expanded: Boolean, modifier: Modifier = Modifier, navigateToDetail: () -> Unit = { }, isImageData: Boolean = false) {

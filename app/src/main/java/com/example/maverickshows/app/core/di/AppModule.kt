@@ -1,8 +1,20 @@
 package com.example.maverickshows.app.core.di
 
 import com.example.maverickshows.app.actor.data.ActorDataRepImpl
+import com.example.maverickshows.app.actor.domain.ActorUseCase
+import com.example.maverickshows.app.actor.domain.GetActorData
+import com.example.maverickshows.app.actor.domain.GetActorFilmography
+import com.example.maverickshows.app.actor.domain.GetActorImages
+import com.example.maverickshows.app.actor.domain.GetAllActorData
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
+import com.example.maverickshows.app.details.domain.DetailUseCase
+import com.example.maverickshows.app.details.domain.GetCredits
+import com.example.maverickshows.app.details.domain.GetDetails
+import com.example.maverickshows.app.details.domain.GetGenres
+import com.example.maverickshows.app.details.domain.GetImages
+import com.example.maverickshows.app.details.domain.GetRecommendations
+import com.example.maverickshows.app.details.domain.ShowDetail
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.GetAllGenres
 import com.example.maverickshows.app.home.domain.GetAllPopular
@@ -129,6 +141,41 @@ object AppModule {
             getTvAiring = GetTvAiring(repositoryImpl),
             getTvOnAir = GetTvOnAir(repositoryImpl)
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailUseCases(detailDataRepImpl: DetailDataRepImpl): DetailUseCase {
+        return DetailUseCase(
+            getDetails = GetDetails(detailDataRepImpl),
+            getGenres = GetGenres(detailDataRepImpl),
+            getImages = GetImages(detailDataRepImpl),
+            getCredits = GetCredits(detailDataRepImpl),
+            getRecommendations = GetRecommendations(detailDataRepImpl)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideActorUseCase(actorDataRepImpl: ActorDataRepImpl): ActorUseCase {
+        return ActorUseCase(
+            getActorData = GetActorData(actorDataRepImpl),
+            getActorImages = GetActorImages(actorDataRepImpl),
+            getActorFilmography = GetActorFilmography(actorDataRepImpl),
+            getGenres = com.example.maverickshows.app.actor.domain.GetGenres(actorDataRepImpl)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllActorData(actorUseCase: ActorUseCase): GetAllActorData {
+        return GetAllActorData(actorUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailData(detailUseCase: DetailUseCase): ShowDetail {
+        return ShowDetail(detailUseCase)
     }
 
     @Provides

@@ -22,7 +22,7 @@ data class HomeUseCases(
     val getTvOnAir: GetTvOnAir
 )
 
-class GetAllTrending(
+class GetAllTrending @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -30,7 +30,7 @@ class GetAllTrending(
     }
 }
 
-class GetAllPopular(
+class GetAllPopular @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -38,7 +38,7 @@ class GetAllPopular(
     }
 }
 
-class GetAllTopRated(
+class GetAllTopRated @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -46,7 +46,7 @@ class GetAllTopRated(
     }
 }
 
-class GetMovieTrending(
+class GetMovieTrending @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -54,7 +54,7 @@ class GetMovieTrending(
     }
 }
 
-class GetMovieNowPlaying(
+class GetMovieNowPlaying @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -62,7 +62,7 @@ class GetMovieNowPlaying(
     }
 }
 
-class GetMoviePopular(
+class GetMoviePopular @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -70,7 +70,7 @@ class GetMoviePopular(
     }
 }
 
-class GetMovieUpcoming(
+class GetMovieUpcoming @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -78,7 +78,7 @@ class GetMovieUpcoming(
     }
 }
 
-class GetMovieTopRated(
+class GetMovieTopRated @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -86,7 +86,7 @@ class GetMovieTopRated(
     }
 }
 
-class GetTvTrending(
+class GetTvTrending @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -94,7 +94,7 @@ class GetTvTrending(
     }
 }
 
-class GetTvAiring(
+class GetTvAiring @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -102,7 +102,7 @@ class GetTvAiring(
     }
 }
 
-class GetTvOnAir(
+class GetTvOnAir @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -110,7 +110,7 @@ class GetTvOnAir(
     }
 }
 
-class GetTvPopular(
+class GetTvPopular @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -118,7 +118,7 @@ class GetTvPopular(
     }
 }
 
-class GetTvTopRated(
+class GetTvTopRated @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(page: String): List<HomeData> {
@@ -126,7 +126,7 @@ class GetTvTopRated(
     }
 }
 
-class GetAllGenres(
+class GetAllGenres @Inject constructor(
     private val repository: HomeDataRepositoryImpl
 ) {
     suspend operator fun invoke(): List<Genre> {

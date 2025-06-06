@@ -2,8 +2,8 @@ package com.example.maverickshows.app.actor.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maverickshows.app.actor.data.ActorDataRepImpl
-import com.example.maverickshows.app.home.presentation.HomeUIState
+import com.example.maverickshows.app.actor.domain.FullActorData
+import com.example.maverickshows.app.actor.domain.GetAllActorData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ActorViewModel @Inject constructor(
-    private val actorDataRepImpl: ActorDataRepImpl
+    private val getAllActorData: GetAllActorData
 ): ViewModel() {
     private val _uiState = MutableStateFlow<ActorUiState>(ActorUiState.Loading)
     val uiState: StateFlow<ActorUiState> = _uiState.asStateFlow()
@@ -21,15 +21,12 @@ class ActorViewModel @Inject constructor(
     fun getActorDetails(id: String) {
         viewModelScope.launch {
             try {
-                val details = actorDataRepImpl.getActorData(id)
-                val images = actorDataRepImpl.getActorImages(id)
-                val films = actorDataRepImpl.getFilmography(id)
-                val genre = actorDataRepImpl.getGenres()
+                val data: FullActorData = getAllActorData(id)
                 _uiState.value = ActorUiState.Success(
-                    data = details,
-                    img = images,
-                    genre = genre,
-                    filmographyData = films
+                    data = data.actorData,
+                    img = data.actorImages,
+                    genre = data.genre,
+                    filmographyData = data.actorFilmography
                 )
             } catch (e: Exception) {
                 _uiState.value = ActorUiState.Error(e.message.toString())

@@ -10,12 +10,10 @@ import com.example.maverickshows.app.core.models.MovieDetails
 import com.example.maverickshows.app.core.models.MovieFilmography
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
-import com.example.maverickshows.app.core.models.Results
 import com.example.maverickshows.app.core.models.TrendingTv
 import com.example.maverickshows.app.core.models.TvData
 import com.example.maverickshows.app.core.models.TvDetails
 import com.example.maverickshows.app.core.models.TvFilmography
-import com.example.maverickshows.app.core.models.TvResults
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

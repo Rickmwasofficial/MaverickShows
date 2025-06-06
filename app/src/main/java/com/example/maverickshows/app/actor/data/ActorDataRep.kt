@@ -4,7 +4,6 @@ import com.example.maverickshows.app.actor.domain.ActorData
 import com.example.maverickshows.app.actor.domain.FilmographyData
 import com.example.maverickshows.app.core.models.ActorImages
 import com.example.maverickshows.app.core.models.Genre
-import com.example.maverickshows.app.core.models.ImageData
 
 interface ActorDataRep {
     suspend fun getActorData(id: String): ActorData

@@ -1,10 +1,6 @@
 package com.example.maverickshows.app.details.presentation
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,32 +35,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import coil.size.Scale
-import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
-import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.details.domain.DetailCredits
 import com.example.maverickshows.app.details.domain.DetailData
 import com.example.maverickshows.app.home.domain.HomeData
-import com.example.maverickshows.app.home.presentation.HomeUIState
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 
 @Composable
@@ -80,9 +71,9 @@ fun DetailUiScreen(
     val uiState by detailViewModel.uiState.collectAsState()
     LaunchedEffect(id, type) {
         if (type.lowercase() == "tv") {
-            detailViewModel.getTvDetails(id)
+            detailViewModel.getDetails(id, type)
         } else {
-            detailViewModel.getMovieDetails(id)
+            detailViewModel.getDetails(id, "movie")
         }
     }
     Surface(
