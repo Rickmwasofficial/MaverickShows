@@ -2,6 +2,7 @@ package com.example.maverickshows.app.details.data
 
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.ImageData
+import com.example.maverickshows.app.core.models.Trailer
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.details.domain.DetailCredits
 import com.example.maverickshows.app.details.domain.DetailData
@@ -60,5 +61,13 @@ class DetailDataRepImpl(
     override suspend fun getGenres(): List<Genre> {
         return (api.getTvGenres().genres.filter { it.id != null && it.name.isNotBlank() } +
                 api.getMovieGenres().genres.filter { it.id != null && it.name.isNotBlank() })
+    }
+
+    override suspend fun getTvTrailers(id: String): Trailer {
+        return api.getTvTrailers(id = id)
+    }
+
+    override suspend fun getMovieTrailers(id: String): Trailer {
+        return  api.getMovieTrailers(id = id)
     }
 }

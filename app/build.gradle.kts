@@ -108,4 +108,6 @@ dependencies {
 
     // ViewModel Compose - Good to keep for general ViewModel usage
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.core)
+    implementation( libs.chromecast.sender)
 }

@@ -2,6 +2,8 @@ package com.example.maverickshows.app.details.domain
 
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.ImageData
+import com.example.maverickshows.app.core.models.Trailer
+import com.example.maverickshows.app.core.models.TrailerVideo
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
 import com.example.maverickshows.app.home.domain.HomeData
 import jakarta.inject.Inject
@@ -11,7 +13,8 @@ data class DetailUseCase (
     val getImages: GetImages,
     val getCredits: GetCredits,
     val getRecommendations: GetRecommendations,
-    val getGenres: GetGenres
+    val getGenres: GetGenres,
+    val getTrailers: GetTrailers
 )
 
 data class ShowData (
@@ -19,7 +22,8 @@ data class ShowData (
     val images: ImageData,
     val credits: List<DetailCredits>,
     val recommendations: List<HomeData>,
-    val genres: List<Genre>
+    val genres: List<Genre>,
+    val trailers: List<TrailerVideo>
 )
 
 class ShowDetail @Inject constructor(
@@ -32,6 +36,7 @@ class ShowDetail @Inject constructor(
             credits = detailUseCase.getCredits(id, type),
             recommendations = detailUseCase.getRecommendations(id, type),
             genres = detailUseCase.getGenres(),
+            trailers = detailUseCase.getTrailers(id, type).results
         )
     }
 }
@@ -57,6 +62,18 @@ class GetImages @Inject constructor(
             detailDataRepImpl.getMovieImages(id)
         } else {
             detailDataRepImpl.getTvImages(id)
+        }
+    }
+}
+
+class GetTrailers @Inject constructor(
+    private val detailDataRepImpl: DetailDataRepImpl
+) {
+    suspend operator fun invoke(id: String, type: String): Trailer {
+        return if (type == "movie") {
+            detailDataRepImpl.getMovieTrailers(id)
+        } else {
+            detailDataRepImpl.getTvTrailers(id)
         }
     }
 }

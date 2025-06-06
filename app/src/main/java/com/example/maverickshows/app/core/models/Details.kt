@@ -263,3 +263,26 @@ data class Crew(
     val department: String?,
     val job: String?
 )
+
+@Serializable
+data class Trailer(
+    val id: Int,
+    val results: List<TrailerVideo>
+)
+
+@Serializable
+data class TrailerVideo(
+    @SerialName("iso_639_1")
+    val iso1: String?,
+    @SerialName("iso_3166_1")
+    val iso2: String?,
+    val name: String?,
+    val key: String?,
+    val site: String?,
+    val size: Int?,
+    val type: String?,
+    val official: Boolean = true,
+    @SerialName("published_at")
+    val published: String?,
+    val id: String
+)

@@ -27,7 +27,8 @@ class DetailViewModel @Inject constructor(
                     imgData = data.images,
                     credits = data.credits,
                     recommendations = data.recommendations,
-                    genres = data.genres
+                    genres = data.genres,
+                    trailers = data.trailers
                 )
             } catch (e: Exception) {
                 _uiState.value = DetailUiState.Error(e.message.toString())

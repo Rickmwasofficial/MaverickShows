@@ -14,6 +14,7 @@ import com.example.maverickshows.app.details.domain.GetDetails
 import com.example.maverickshows.app.details.domain.GetGenres
 import com.example.maverickshows.app.details.domain.GetImages
 import com.example.maverickshows.app.details.domain.GetRecommendations
+import com.example.maverickshows.app.details.domain.GetTrailers
 import com.example.maverickshows.app.details.domain.ShowDetail
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.GetAllGenres
@@ -151,7 +152,8 @@ object AppModule {
             getGenres = GetGenres(detailDataRepImpl),
             getImages = GetImages(detailDataRepImpl),
             getCredits = GetCredits(detailDataRepImpl),
-            getRecommendations = GetRecommendations(detailDataRepImpl)
+            getRecommendations = GetRecommendations(detailDataRepImpl),
+            getTrailers = GetTrailers(detailDataRepImpl)
         )
     }
 

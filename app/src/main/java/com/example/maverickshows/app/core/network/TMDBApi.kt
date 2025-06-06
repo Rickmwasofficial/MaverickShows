@@ -10,6 +10,7 @@ import com.example.maverickshows.app.core.models.MovieDetails
 import com.example.maverickshows.app.core.models.MovieFilmography
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
+import com.example.maverickshows.app.core.models.Trailer
 import com.example.maverickshows.app.core.models.TrendingTv
 import com.example.maverickshows.app.core.models.TvData
 import com.example.maverickshows.app.core.models.TvDetails
@@ -155,4 +156,15 @@ interface TmdbAPI {
     suspend fun getTvFilmography(
         @Path("personId") id: String
     ): TvFilmography
+
+    @GET("tv/{seriesId}/videos")
+    suspend fun getTvTrailers(
+        @Path("seriesId") id: String
+    ): Trailer
+
+    @GET("movie/{movieId}/videos")
+    suspend fun getMovieTrailers(
+        @Path("movieId") id: String
+    ): Trailer
+
 }

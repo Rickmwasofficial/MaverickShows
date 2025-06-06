@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
+import android.view.View
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +49,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.maverickshows.app.core.components.ContentLabel
@@ -53,10 +59,14 @@ import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
 import com.example.maverickshows.app.core.models.ImageData
+import com.example.maverickshows.app.core.models.TrailerVideo
 import com.example.maverickshows.app.details.domain.DetailCredits
 import com.example.maverickshows.app.details.domain.DetailData
 import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
 fun DetailUiScreen(
@@ -105,6 +115,11 @@ fun DetailUiScreen(
                     }
                     item {
                         Dates((uiState as DetailUiState.Success).data)
+                    }
+                    if ((uiState as DetailUiState.Success).trailers.isNotEmpty()) {
+                        item {
+                            VideoRows((uiState as DetailUiState.Success).trailers)
+                        }
                     }
                     item {
                         ImageRows((uiState as DetailUiState.Success).imgData)
@@ -157,6 +172,57 @@ fun DetailUiScreen(
         }
     }
 }
+
+@Composable
+fun YoutubeScreen(
+    videoId: String,
+    lifecycleOwner: LifecycleOwner
+) {
+    AndroidView(
+        modifier = Modifier.width(320.dp)
+            .height(170.dp)
+            .background(Color.Black),
+        factory = { context ->
+            YouTubePlayerView(context).apply {
+                lifecycleOwner.lifecycle.addObserver(this)
+
+                addYouTubePlayerListener(object: AbstractYouTubePlayerListener(){
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.cueVideo(videoId, 0f)
+                    }
+                })
+            }
+        }
+    )
+}
+
+@Composable
+fun VideoRows(data: List<TrailerVideo>, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth().padding(start = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            text = "Trailers",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Justify
+        )
+
+        LazyRow(
+            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(1.dp)
+        ) {
+            items(data.size) { num ->
+                if (data[num].site?.toLowerCase() == "youtube") {
+                    YoutubeScreen(data[num].key.toString(), LocalLifecycleOwner.current)
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun MovieDesc(text: String, modifier: Modifier = Modifier) {
