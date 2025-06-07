@@ -45,6 +45,7 @@ import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.home.presentation.HomeViewModel
 import com.example.maverickshows.app.search.presentation.SearchUiScreen
+import com.example.maverickshows.app.search.presentation.SearchViewModel
 import com.example.maverickshows.ui.theme.MaverickShowsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
@@ -184,7 +185,13 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             )
         }
         composable<Search> {
-            SearchUiScreen()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
+            SearchUiScreen(
+                searchViewModel = searchViewModel,
+                navigateToDetail = { id: String, type: String ->
+                    navController.navigate(Detail(id, type))
+                },
+            )
         }
         composable<Favorites> {
             FavoritesUiScreen()

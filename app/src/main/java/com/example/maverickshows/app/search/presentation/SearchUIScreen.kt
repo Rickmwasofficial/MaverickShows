@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,14 +39,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
+import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
+import com.example.maverickshows.app.home.presentation.HomeUIState
+import java.util.Locale
 
 @Composable
-fun SearchUiScreen(modifier: Modifier = Modifier) {
-    var search by remember { mutableStateOf("") }
+fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, String) -> Unit, modifier: Modifier = Modifier) {
+    val searchState by searchViewModel.uiState.collectAsState()
+    val search by searchViewModel.query.collectAsState()
     val cats = listOf<String>("Horror", "Drama", "USA", "Animation", "Action", "Documentary")
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -58,24 +66,64 @@ fun SearchUiScreen(modifier: Modifier = Modifier) {
                 modifier = modifier.fillMaxWidth().padding(horizontal = 25.dp),
             ) {
                 SearchView(search = search, onValueChange = {
-                    search = it
+                    searchViewModel.updateQuery(it)
                 })
             }
-            Column(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                ContentLabel("You searched for: ", {  })
-                LazyRow(
-                    modifier = Modifier.padding(start = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(1.dp)
-                ) {
-                    repeat(10) {
-                        item {
-                            MovieCard(stringResource(R.string.movie_name), "2019", "Thriller", painterResource(R.drawable.peaky).toString(), false, navigateToDetail = { })
+            when (searchState) {
+                is SearchUIState.Success -> {
+                    if (search.isNotEmpty()) {
+                        Column(
+                            modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            ContentLabel("You searched for: ${search.capitalize(Locale.ROOT)}", { })
+                            LazyRow(
+                                modifier = Modifier.padding(start = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                contentPadding = PaddingValues(1.dp)
+                            ) {
+                                var data = (searchState as SearchUIState.Success).data
+                                items(data.size) { num ->
+                                    val genres = if (data[num].genre.isNotEmpty()) {
+                                        searchViewModel.getStringGenre(data[num].genre)
+                                    } else {
+                                        listOf("Null")
+                                    }
+                                    MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], data[num].img, false, navigateToDetail = { navigateToDetail(data[num].id.toString(), data[num].type) })
+                                }
+                            }
                         }
                     }
+                }
+                is SearchUIState.Loading -> {
+                    LoadingScreen("Fetching Results")
+                }
+                is SearchUIState.Error -> {
+                    Column(
+                        modifier = modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = (searchState as SearchUIState.Error).message,
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(46.dp)
+                            )
+                            Text(
+                                text = (searchState as SearchUIState.Error).message,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+                is SearchUIState.Idle -> {
+
                 }
             }
             Column(

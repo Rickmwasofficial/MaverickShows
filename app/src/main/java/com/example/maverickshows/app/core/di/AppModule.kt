@@ -34,6 +34,7 @@ import com.example.maverickshows.app.home.domain.GetTvTopRated
 import com.example.maverickshows.app.home.domain.GetTvTrending
 import com.example.maverickshows.app.home.domain.HomeUseCases
 import com.example.maverickshows.app.home.domain.RefreshUseCase
+import com.example.maverickshows.app.search.data.SearchRepImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -172,6 +173,12 @@ object AppModule {
     @Singleton
     fun provideAllActorData(actorUseCase: ActorUseCase): GetAllActorData {
         return GetAllActorData(actorUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchRepImpl(api: TmdbAPI): SearchRepImpl {
+        return SearchRepImpl(api)
     }
 
     @Provides

@@ -167,4 +167,13 @@ interface TmdbAPI {
         @Path("movieId") id: String
     ): Trailer
 
+    @GET("search/movie")
+    suspend fun getMovieSearch(
+        @Query("query") q: String,
+    ): PopularAndTopRatedMovies
+
+    @GET("search/tv")
+    suspend fun getTvSearch(
+        @Query("query") q: String,
+    ): TvData
 }
