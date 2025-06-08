@@ -1,11 +1,15 @@
 package com.example.maverickshows.app.core.di
 
+import android.content.Context
+import com.example.maverickshows.BuildConfig
 import com.example.maverickshows.app.actor.data.ActorDataRepImpl
 import com.example.maverickshows.app.actor.domain.ActorUseCase
 import com.example.maverickshows.app.actor.domain.GetActorData
 import com.example.maverickshows.app.actor.domain.GetActorFilmography
 import com.example.maverickshows.app.actor.domain.GetActorImages
 import com.example.maverickshows.app.actor.domain.GetAllActorData
+import com.example.maverickshows.app.core.data.AppDb
+import com.example.maverickshows.app.core.data.RecentDao
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
 import com.example.maverickshows.app.details.domain.DetailUseCase
@@ -39,6 +43,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -55,7 +60,7 @@ object AppModule {
     @Provides
     @Singleton
     fun providesApiKey(): String {
-        val apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Y2ZmNGE2NzU4MmQ1MTIzNTg1OWVhMTE5ZDMwYWE0MiIsIm5iZiI6MTcwMzg1MzU1My4yNzQsInN1YiI6IjY1OGViZGYxY2ZlNDhmNjQyNmQ5NWI0MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HuFao_QBgA2_FJwXDJUnOHJ8cY97ZyU98H78AU49vvU"
+        val apiKey = BuildConfig.TMDB_API
         if (apiKey.isEmpty()) {
             println("API Key is empty")
         }
@@ -88,6 +93,16 @@ object AppModule {
             .addInterceptor(apiKeyInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
+    }
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDb {
+        return AppDb.getDatabase(context)
+    }
+
+    @Provides
+    fun provideRecentDao(database: AppDb): RecentDao {
+        return database.recentDao()
     }
 
     @Provides
@@ -177,8 +192,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSearchRepImpl(api: TmdbAPI): SearchRepImpl {
-        return SearchRepImpl(api)
+    fun provideSearchRepImpl(api: TmdbAPI, recentDao: RecentDao): SearchRepImpl {
+        return SearchRepImpl(api, recentDao)
     }
 
     @Provides

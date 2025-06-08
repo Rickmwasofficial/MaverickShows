@@ -1,13 +1,18 @@
 package com.example.maverickshows.app.search.presentation
 
+import com.example.maverickshows.app.core.data.RecentSearchEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.domain.HomeData
+import kotlinx.coroutines.flow.Flow
 
 interface SearchUIState {
-    object Idle: SearchUIState
+    data class Idle(
+        val recentSearches: List<HomeData>
+    ): SearchUIState
     data class Success(
         val data: List<HomeData>,
-        val genres: List<Genre>
+        val genres: List<Genre>,
+        val recentSearches: List<HomeData>
     ): SearchUIState
     object Loading: SearchUIState
     data class Error(

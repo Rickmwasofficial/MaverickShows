@@ -6,12 +6,14 @@ import com.example.maverickshows.app.core.models.AllTrending
 import com.example.maverickshows.app.core.models.Credits
 import com.example.maverickshows.app.core.models.Genres
 import com.example.maverickshows.app.core.models.ImageData
+import com.example.maverickshows.app.core.models.Movie
 import com.example.maverickshows.app.core.models.MovieDetails
 import com.example.maverickshows.app.core.models.MovieFilmography
 import com.example.maverickshows.app.core.models.NowPlayingAndUpcomingMovies
 import com.example.maverickshows.app.core.models.PopularAndTopRatedMovies
 import com.example.maverickshows.app.core.models.Trailer
 import com.example.maverickshows.app.core.models.TrendingTv
+import com.example.maverickshows.app.core.models.Tv
 import com.example.maverickshows.app.core.models.TvData
 import com.example.maverickshows.app.core.models.TvDetails
 import com.example.maverickshows.app.core.models.TvFilmography
@@ -169,11 +171,21 @@ interface TmdbAPI {
 
     @GET("search/movie")
     suspend fun getMovieSearch(
-        @Query("query") q: String,
+        @Query("query") q: String
     ): PopularAndTopRatedMovies
 
     @GET("search/tv")
     suspend fun getTvSearch(
-        @Query("query") q: String,
+        @Query("query") q: String
     ): TvData
+
+    @GET("movie/{movieId}")
+    suspend fun getMovieById(
+        @Path("movieId") id: String
+    ): MovieDetails
+
+    @GET("tv/{tvId}")
+    suspend fun getTvById(
+        @Path("tvId") id: String
+    ): TvDetails
 }

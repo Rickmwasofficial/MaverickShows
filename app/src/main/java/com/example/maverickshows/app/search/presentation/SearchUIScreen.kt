@@ -1,9 +1,12 @@
 package com.example.maverickshows.app.search.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,16 +41,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
+import com.example.maverickshows.app.core.data.RecentSearchEntity
 import com.example.maverickshows.app.home.presentation.HomeUIState
 import java.util.Locale
 
@@ -52,7 +65,6 @@ import java.util.Locale
 fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, String) -> Unit, modifier: Modifier = Modifier) {
     val searchState by searchViewModel.uiState.collectAsState()
     val search by searchViewModel.query.collectAsState()
-    val cats = listOf<String>("Horror", "Drama", "USA", "Animation", "Action", "Documentary")
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -89,7 +101,37 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                                     } else {
                                         listOf("Null")
                                     }
-                                    MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], data[num].img, false, navigateToDetail = { navigateToDetail(data[num].id.toString(), data[num].type) })
+                                    MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], data[num].img, false, navigateToDetail = {
+                                        searchViewModel.saveItem(RecentSearchEntity(
+                                            id = data[num].id.toString(),
+                                            title = data[num].title ?: data[num].name.toString(),
+                                            type = data[num].type
+                                        ))
+                                        navigateToDetail(data[num].id.toString(), data[num].type)
+                                    })
+                                }
+                            }
+                            Column(
+                                modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                ContentLabel("Recent Searches", {  })
+                            }
+                            val dbData = (searchState as SearchUIState.Success).recentSearches
+                            LazyColumn(
+                                modifier = Modifier.fillMaxHeight().padding(vertical = 10.dp).align(Alignment.CenterHorizontally)
+                                    .widthIn(max = 340.dp),
+                                verticalArrangement = Arrangement.spacedBy(1.dp),
+                            ) {
+                                items(dbData.size) { num ->
+                                    SearchedCard(dbData[num].img, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
+                                        RecentSearchEntity(
+                                            id = dbData[num].id.toString(),
+                                            title = dbData[num].title ?: dbData[num].name.toString(),
+                                            type = dbData[num].type
+                                        )) }, Modifier.clickable(onClick = {
+                                        navigateToDetail(dbData[num].id.toString(), dbData[num].type)
+                                    }))
                                 }
                             }
                         }
@@ -123,61 +165,97 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                     }
                 }
                 is SearchUIState.Idle -> {
-
-                }
-            }
-            Column(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                ContentLabel("Filters ", {  })
-                LazyRow(
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    contentPadding = PaddingValues(vertical = 1.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(cats.size) { cat ->
-                        Button(
-                            onClick = { },
-                            modifier = Modifier.height(30.dp).padding(horizontal = 1.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0.3f, 0.3f, 0.3f, 0.6f),
-                                disabledContainerColor = Color(0.3f, 0.3f, 0.3f, 0.8f),
-                                contentColor = Color.White,
-                                disabledContentColor = Color.White
-                            ),
-                            enabled = true,
-                            shape = RoundedCornerShape(6.dp),
-                            contentPadding = PaddingValues(vertical = 0.dp, horizontal = 5.dp)
-                        ) {
-                            Text(
-                                text = "${cats[cat]}  x",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.ExtraBold
-                            )
+                    Column(
+                        modifier = modifier.padding(start = 15.dp, end = 5.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        ContentLabel("Recent Searches", {  })
+                    }
+                    val dbData = (searchState as SearchUIState.Idle).recentSearches
+                    LazyColumn(
+                        modifier = Modifier.weight(1f).fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).align(Alignment.CenterHorizontally).height(80.dp),
+                        verticalArrangement = Arrangement.spacedBy(1.dp),
+                    ) {
+                        items(dbData.size) { num ->
+                            SearchedCard(dbData[num].img, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
+                                RecentSearchEntity(
+                                    id = dbData[num].id.toString(),
+                                    title = dbData[num].title ?: dbData[num].name.toString(),
+                                    type = dbData[num].type
+                                )) }, Modifier.clickable(onClick = {
+                                navigateToDetail(dbData[num].id.toString(), dbData[num].type)
+                            }))
                         }
                     }
                 }
             }
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(120.dp),
-                modifier = Modifier.fillMaxHeight().padding(vertical = 10.dp).align(Alignment.CenterHorizontally)
-                    .widthIn(max = 340.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalArrangement = Arrangement.spacedBy(1.dp),
+        }
+    }
+}
+
+@Composable
+fun SearchedCard(img: String, title: String, genre: String, overview: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .height(70.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://image.tmdb.org/t/p/original/$img")
+                        .build(),
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
+                alpha = 0.59f,
+                modifier = Modifier.size(70.dp).clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(3.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.Start
             ) {
-                repeat(60) {
-                    item {
-                        MovieCard(
-                            stringResource(R.string.movie_name),
-                            "2019",
-                            "Thriller",
-                            painterResource(R.drawable.peaky).toString(),
-                            false,
-                            Modifier.padding(vertical = 5.dp, horizontal = 10.dp)
-                        )
-                    }
-                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier
+                )
+                Text(
+                    text = overview,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier,
+                    maxLines = 2
+                )
+                Text(
+                    text = genre,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(end = 15.dp)
+                    .clickable(onClick = { onClick() })
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Delete,
+                    contentDescription = null,
+                    tint = Color.Red,
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }

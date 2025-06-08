@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin") // Ensure this is applied
     id("kotlinx-serialization")
 }
@@ -101,7 +101,7 @@ dependencies {
     // Dagger Hilt
     // Ensure libs.hilt.android and libs.hilt.compiler use the exact same version
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // Hilt Navigation Compose - This is usually sufficient for ViewModel injection in Compose
     implementation(libs.androidx.hilt.navigation.compose)
@@ -110,4 +110,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.core)
     implementation( libs.chromecast.sender)
+
+    // room db
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }

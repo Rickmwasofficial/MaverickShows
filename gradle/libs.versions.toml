@@ -1,9 +1,9 @@
 [versions]
-agp = "8.10.0"
+agp = "8.10.1"
 chromecastSender = "0.28"
 coilCompose = "2.5.0"
 converterGson = "2.9.0"
-core = "11.1.0"
+core = "12.0.0"
 hiltAndroid = "2.56.2"
 hiltLifecycleViewmodel = "1.0.0-alpha03"
 hiltNavigationCompose = "1.2.0"
@@ -13,17 +13,18 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 kotlinxSerializationJson = "1.7.3"
-kotlinxSerializationJsonVersion = "1.6.2"
-lifecycleRuntimeKtx = "2.9.0"
+kotlinxSerializationJsonVersion = "1.7.3"
+lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2024.09.00"
-lifecycleViewmodelCompose = "2.9.0"
-lifecycleViewmodelKtx = "2.9.0"
+composeBom = "2025.06.00"
+lifecycleViewmodelCompose = "2.9.1"
+lifecycleViewmodelKtx = "2.9.1"
 loggingInterceptor = "4.12.0"
 okhttp = "4.12.0"
 retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 retrofit2KotlinxSerializationConverterVersion = "1.0.0"
+roomRuntime = "2.7.1"
 uiTextGoogleFonts = "1.8.2"
 
 [libraries]
@@ -34,6 +35,9 @@ androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-vie
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 chromecast-sender = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender", version.ref = "chromecastSender" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
