@@ -25,7 +25,9 @@ class SearchViewModel @Inject constructor(
     private val searchRepImpl: SearchRepImpl
 ): ViewModel() {
     private var _uiState = MutableStateFlow<SearchUIState>(
-        SearchUIState.Loading
+        SearchUIState.Idle(
+            listOf()
+        )
     )
 
     init {
@@ -44,12 +46,29 @@ class SearchViewModel @Inject constructor(
             searchRepImpl.getAllSearchedItemsStream()
                 .collectLatest { recentSearches ->
                     val searches = searchRepImpl.getSavedShows(recentSearches)
-                    _uiState.value = SearchUIState.Success(
-                        listOf(),
-                        listOf(),
-                        searches
-                    )
+
+                    // Update state based on current state type
+                    when (val currentState = _uiState.value) {
+                        is SearchUIState.Idle -> {
+                            _uiState.value = currentState.copy(recentSearches = searches)
+                        }
+                        is SearchUIState.Success -> {
+                            _uiState.value = currentState.copy(recentSearches = searches)
+                        }
+                        // Don't update Loading or Error states with recent searches
+                        is SearchUIState.Loading, is SearchUIState.Error -> {
+                            // Keep current state unchanged
+                        }
+                    }
                 }
+        }
+    }
+
+    fun resetToIdle() {
+        viewModelScope.launch {
+            val recentSearchEntities = searchRepImpl.getAllSearchedItemsStream().first()
+            val searches = searchRepImpl.getSavedShows(recentSearchEntities)
+            _uiState.value = SearchUIState.Idle(recentSearches = searches)
         }
     }
 
