@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -74,10 +75,10 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
     ) {
         Column(
             modifier = modifier.fillMaxSize().padding(top = 35.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Box(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 25.dp),
+                modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp),
             ) {
                 SearchView(search = search, onValueChange = {
                     searchViewModel.updateQuery(it)
@@ -204,15 +205,16 @@ fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, nav
         modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).height(80.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp),
     ) {
-        items(dbData.size) { num ->
-            SearchedCard(dbData[num].img2, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
+        items(dbData, key = { it.id }) {item ->
+            SearchedCard(item.img2, item.title ?: item.name.toString(), item.releaseDate, item.type.toUpperCase(), { searchViewModel.deleteItem(
                 RecentSearchEntity(
-                    id = dbData[num].id.toString(),
-                    title = dbData[num].title ?: dbData[num].name.toString(),
-                    type = dbData[num].type
+                    id = item.id.toString(),
+                    title = item.title ?: item.name.toString(),
+                    type = item.type
                 )) }, {
-                navigateToDetail(dbData[num].id.toString(), dbData[num].type)
-            })
+                navigateToDetail(item.id.toString(), item.type)
+            },
+                Modifier.animateItem())
         }
     }
     Button(
@@ -227,7 +229,7 @@ fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, nav
         )
     ) {
         Text(
-            text = "Delete all Searches",
+            text = "Delete all",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
@@ -256,7 +258,7 @@ fun SearchedCard(img: String, title: String, genre: String, overview: String, on
                         .build(),
                 contentDescription = title,
                 contentScale = ContentScale.Crop,
-                alpha = 0.59f,
+                alpha = 1f,
                 modifier = Modifier.height(80.dp).width(100.dp).clip(RoundedCornerShape(topStart = 1.dp, bottomStart = 1.dp)),
             )
             Column(
