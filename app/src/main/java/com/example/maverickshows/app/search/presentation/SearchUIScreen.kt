@@ -115,14 +115,14 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                                 }
                             }
                         }
-                        var data = (searchState as SearchUIState.Success).recentSearches
-                        if (data.isEmpty()) {
-                            NoSearch()
-                        } else {
-                            RecentSearches(data, searchViewModel, { id: String, type: String ->
-                                navigateToDetail(id, type)
-                            }, Modifier.weight(1f))
-                        }
+                    }
+                    var data = (searchState as SearchUIState.Success).recentSearches
+                    if (data.isEmpty()) {
+                        NoSearch()
+                    } else {
+                        RecentSearches(data, searchViewModel, { id: String, type: String ->
+                            navigateToDetail(id, type)
+                        }, Modifier.weight(1f))
                     }
                 }
                 is SearchUIState.Loading -> {
@@ -150,16 +150,6 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                                 textAlign = TextAlign.Center
                             )
                         }
-                    }
-                }
-                is SearchUIState.Idle -> {
-                    val data = (searchState as SearchUIState.Idle).recentSearches
-                    if (data.isEmpty()) {
-                        NoSearch()
-                    } else {
-                        RecentSearches(data, searchViewModel, { id: String, type: String ->
-                            navigateToDetail(id, type)
-                        }, Modifier.weight(1f))
                     }
                 }
             }
