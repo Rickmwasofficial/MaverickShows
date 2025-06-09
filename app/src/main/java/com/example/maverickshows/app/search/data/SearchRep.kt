@@ -12,4 +12,5 @@ interface SearchRep {
     suspend fun insertSearchedItem(item: RecentSearchEntity): String
     suspend fun deleteItem(item: RecentSearchEntity): String
     suspend fun getSavedShows(saved: List<RecentSearchEntity>): List<HomeData>
+    suspend fun deleteAllItems(): String
 }

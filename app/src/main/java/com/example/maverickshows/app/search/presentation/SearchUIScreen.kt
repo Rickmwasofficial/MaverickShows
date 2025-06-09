@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -58,6 +59,7 @@ import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.data.RecentSearchEntity
+import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.presentation.HomeUIState
 import java.util.Locale
 
@@ -85,7 +87,7 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                 is SearchUIState.Success -> {
                     if (search.isNotEmpty()) {
                         Column(
-                            modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                            modifier = modifier.fillMaxWidth().padding(start = 10.dp),
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             ContentLabel("You searched for: ${search.capitalize(Locale.ROOT)}", { })
@@ -111,29 +113,14 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                                     })
                                 }
                             }
-                            Column(
-                                modifier = modifier.fillMaxWidth().padding(horizontal = 5.dp),
-                                verticalArrangement = Arrangement.spacedBy(2.dp)
-                            ) {
-                                ContentLabel("Recent Searches", {  })
-                            }
-                            val dbData = (searchState as SearchUIState.Success).recentSearches
-                            LazyColumn(
-                                modifier = Modifier.fillMaxHeight().padding(vertical = 10.dp).align(Alignment.CenterHorizontally)
-                                    .widthIn(max = 340.dp),
-                                verticalArrangement = Arrangement.spacedBy(1.dp),
-                            ) {
-                                items(dbData.size) { num ->
-                                    SearchedCard(dbData[num].img, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
-                                        RecentSearchEntity(
-                                            id = dbData[num].id.toString(),
-                                            title = dbData[num].title ?: dbData[num].name.toString(),
-                                            type = dbData[num].type
-                                        )) }, Modifier.clickable(onClick = {
-                                        navigateToDetail(dbData[num].id.toString(), dbData[num].type)
-                                    }))
-                                }
-                            }
+                        }
+                        var data = (searchState as SearchUIState.Success).recentSearches
+                        if (data.isEmpty()) {
+                            NoSearch()
+                        } else {
+                            RecentSearches(data, searchViewModel, { id: String, type: String ->
+                                navigateToDetail(id, type)
+                            }, Modifier.weight(1f))
                         }
                     }
                 }
@@ -165,27 +152,13 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
                     }
                 }
                 is SearchUIState.Idle -> {
-                    Column(
-                        modifier = modifier.padding(start = 15.dp, end = 5.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        ContentLabel("Recent Searches", {  })
-                    }
-                    val dbData = (searchState as SearchUIState.Idle).recentSearches
-                    LazyColumn(
-                        modifier = Modifier.weight(1f).fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).align(Alignment.CenterHorizontally).height(80.dp),
-                        verticalArrangement = Arrangement.spacedBy(1.dp),
-                    ) {
-                        items(dbData.size) { num ->
-                            SearchedCard(dbData[num].img, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
-                                RecentSearchEntity(
-                                    id = dbData[num].id.toString(),
-                                    title = dbData[num].title ?: dbData[num].name.toString(),
-                                    type = dbData[num].type
-                                )) }, Modifier.clickable(onClick = {
-                                navigateToDetail(dbData[num].id.toString(), dbData[num].type)
-                            }))
-                        }
+                    val data = (searchState as SearchUIState.Idle).recentSearches
+                    if (data.isEmpty()) {
+                        NoSearch()
+                    } else {
+                        RecentSearches(data, searchViewModel, { id: String, type: String ->
+                            navigateToDetail(id, type)
+                        }, Modifier.weight(1f))
                     }
                 }
             }
@@ -194,14 +167,83 @@ fun SearchUiScreen(searchViewModel: SearchViewModel, navigateToDetail: (String, 
 }
 
 @Composable
-fun SearchedCard(img: String, title: String, genre: String, overview: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun NoSearch(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "No Searches",
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(46.dp)
+            )
+            Text(
+                text = "No Recent Searches",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, navigateToDetail: (String, String) -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier.padding(start = 10.dp, end = 5.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        ContentLabel("Recent Searches", {  })
+    }
+    LazyColumn(
+        modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).height(80.dp),
+        verticalArrangement = Arrangement.spacedBy(1.dp),
+    ) {
+        items(dbData.size) { num ->
+            SearchedCard(dbData[num].img2, dbData[num].title ?: dbData[num].name.toString(), dbData[num].releaseDate, dbData[num].type.toUpperCase(), { searchViewModel.deleteItem(
+                RecentSearchEntity(
+                    id = dbData[num].id.toString(),
+                    title = dbData[num].title ?: dbData[num].name.toString(),
+                    type = dbData[num].type
+                )) }, {
+                navigateToDetail(dbData[num].id.toString(), dbData[num].type)
+            })
+        }
+    }
+    Button(
+        onClick = { searchViewModel.deleteAll() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(4.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
+        )
+    ) {
+        Text(
+            text = "Delete all Searches",
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+fun SearchedCard(img: String, title: String, genre: String, overview: String, onClick: () -> Unit, goToDetail: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 4.dp)
-            .height(70.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .height(80.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainer),
+        onClick = { goToDetail() },
+        shape = RoundedCornerShape(4.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -215,14 +257,14 @@ fun SearchedCard(img: String, title: String, genre: String, overview: String, on
                 contentDescription = title,
                 contentScale = ContentScale.Crop,
                 alpha = 0.59f,
-                modifier = Modifier.size(70.dp).clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+                modifier = Modifier.height(80.dp).width(100.dp).clip(RoundedCornerShape(topStart = 1.dp, bottomStart = 1.dp)),
             )
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(3.dp)
                     .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
@@ -253,7 +295,7 @@ fun SearchedCard(img: String, title: String, genre: String, overview: String, on
                 Icon(
                     imageVector = Icons.Rounded.Delete,
                     contentDescription = null,
-                    tint = Color.Red,
+                    tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(20.dp)
                 )
             }

@@ -54,4 +54,13 @@ class SearchRepImpl(
         }
         return savedData.toList()
     }
+
+    override suspend fun deleteAllItems(): String {
+        try {
+            searchDao.deleteAllRows()
+            return "Deleted Successfully"
+        } catch (e: Exception) {
+            return e.message.toString()
+        }
+    }
 }

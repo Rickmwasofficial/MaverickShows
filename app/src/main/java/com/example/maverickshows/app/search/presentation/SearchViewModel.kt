@@ -9,6 +9,8 @@ import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.presentation.HomeUIState
 import com.example.maverickshows.app.search.data.SearchRepImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,49 +31,61 @@ class SearchViewModel @Inject constructor(
     )
 
     init {
-        getRecentSearches()
-        // Fixed: Remove the infinite while loop and properly observe recent searches
-        observeRecentSearchesForSuccessState()
+        observeRecentSearches()
     }
 
     val uiState: StateFlow<SearchUIState> = _uiState.asStateFlow()
     private var _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
-    private fun observeRecentSearchesForSuccessState() {
-        viewModelScope.launch {
-            searchRepImpl.getAllSearchedItemsStream()
-                .collectLatest { recentSearches ->
-                    if (_uiState.value is SearchUIState.Success) {
-                        val currentState = _uiState.value as SearchUIState.Success
-                        val searches = searchRepImpl.getSavedShows(recentSearches)
+    private var searchJob: Job? = null
 
-                        _uiState.value = currentState.copy(
-                            recentSearches = searches
-                        )
-                    }
-                }
-        }
-    }
-
-    fun getRecentSearches() {
+    // Single function to observe recent searches and update state accordingly
+    private fun observeRecentSearches() {
         viewModelScope.launch {
             searchRepImpl.getAllSearchedItemsStream()
                 .collectLatest { recentSearches ->
                     val searches = searchRepImpl.getSavedShows(recentSearches)
 
-                    _uiState.value = SearchUIState.Idle(
-                        recentSearches = searches
-                    )
+                    // Update state based on current state type
+                    when (val currentState = _uiState.value) {
+                        is SearchUIState.Idle -> {
+                            _uiState.value = currentState.copy(recentSearches = searches)
+                        }
+                        is SearchUIState.Success -> {
+                            _uiState.value = currentState.copy(recentSearches = searches)
+                        }
+                        // Don't update Loading or Error states with recent searches
+                        is SearchUIState.Loading, is SearchUIState.Error -> {
+                            // Keep current state unchanged
+                        }
+                    }
                 }
         }
     }
 
-    fun updateQuery(q: String) {
-//        _uiState.value = SearchUIState.Loading
-        _query.value = q.toLowerCase()
-        getSearchResults()
+    fun resetToIdle() {
+        viewModelScope.launch {
+            val recentSearchEntities = searchRepImpl.getAllSearchedItemsStream().first()
+            val searches = searchRepImpl.getSavedShows(recentSearchEntities)
+            _uiState.value = SearchUIState.Idle(recentSearches = searches)
+        }
     }
+
+    fun updateQuery(q: String) {
+        val normalizedQuery = q.toLowerCase()
+        _query.value = normalizedQuery
+
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(300)
+            if (_query.value == normalizedQuery) {
+                getSearchResults()
+            }
+        }
+    }
+
     fun saveItem(item: RecentSearchEntity) {
         viewModelScope.launch {
             searchRepImpl.insertSearchedItem(item)
@@ -81,6 +95,12 @@ class SearchViewModel @Inject constructor(
     fun deleteItem(item: RecentSearchEntity) {
         viewModelScope.launch {
             searchRepImpl.deleteItem(item)
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch {
+            searchRepImpl.deleteAllItems()
         }
     }
 
@@ -105,19 +125,20 @@ class SearchViewModel @Inject constructor(
 
     fun getStringGenre(genreIds: List<Int>): List<String> {
         val stringGenres = mutableListOf<String>()
-        if (_uiState.value is SearchUIState.Success) {
-            val currentState = _uiState.value as SearchUIState.Success
-            for (genreId in genreIds) {
-                for (genre in currentState.genres) {
-                    if (genre.id == genreId) {
-                        stringGenres.add(genre.name)
-                        break
-                    } else {
-                        continue
-                    }
+
+        // Safe state checking instead of unsafe casting
+        when (val currentState = _uiState.value) {
+            is SearchUIState.Success -> {
+                for (genreId in genreIds) {
+                    val genre = currentState.genres.find { it.id == genreId }
+                    genre?.let { stringGenres.add(it.name) }
                 }
             }
+            else -> {
+                // Return empty list if not in Success state
+            }
         }
+
         return stringGenres
     }
 }

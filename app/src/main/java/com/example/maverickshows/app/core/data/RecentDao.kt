@@ -21,4 +21,7 @@ interface RecentDao {
 
     @Query("SELECT * FROM `Recent Search` ORDER BY created_at ASC")
     fun getAllSearches(): Flow<List<RecentSearchEntity>>
+
+    @Query("DELETE FROM `Recent Search`")
+    suspend fun deleteAllRows()
 }
