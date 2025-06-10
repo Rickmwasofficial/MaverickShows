@@ -19,7 +19,7 @@ interface RecentDao {
     @Delete
     suspend fun delete(recent: RecentSearchEntity)
 
-    @Query("SELECT * FROM `Recent Search` ORDER BY created_at ASC")
+    @Query("SELECT * FROM `Recent Search` ORDER BY created_at DESC")
     fun getAllSearches(): Flow<List<RecentSearchEntity>>
 
     @Query("DELETE FROM `Recent Search`")

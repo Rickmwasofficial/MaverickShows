@@ -54,6 +54,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.maverickshows.R
 import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
@@ -275,6 +276,8 @@ fun Companies(data: DetailData, modifier: Modifier = Modifier) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
                                     .data("https://image.tmdb.org/t/p/original/${data.companies[num].logo}")
+                                    .fallback(R.drawable.fallback)
+                                    .placeholder(R.drawable.load)
                                     .build(),
                                 contentDescription = data.companies[num].name,
                                 contentScale = ContentScale.Fit,
@@ -427,6 +430,8 @@ fun CastCard(name: String, role: String, department: String, img: String,
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data("https://image.tmdb.org/t/p/w500/${img}")
+                .fallback(R.drawable.fallback)
+                .placeholder(R.drawable.load)
                 .build(),
             contentDescription = name,
             contentScale = ContentScale.Crop,

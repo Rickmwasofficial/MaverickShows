@@ -15,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.maverickshows.R
 
 @Composable
 fun MovieCard(title: String, year: String, genre: String, img: String, expanded: Boolean, modifier: Modifier = Modifier, navigateToDetail: () -> Unit = { }, isImageData: Boolean = false) {
@@ -40,6 +42,7 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data("https://image.tmdb.org/t/p/original/$img")
+                .placeholder(R.drawable.load)
                 .crossfade(true)
                 .build(),
             contentDescription = title,

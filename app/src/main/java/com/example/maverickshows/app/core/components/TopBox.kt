@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.maverickshows.R
 
 @Composable
 fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }, popularity: Double = 0.0, avg: Double = 0.0) {
@@ -45,12 +46,14 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                 ImageRequest.Builder(LocalContext.current)
                     .data("https://image.tmdb.org/t/p/w780/$img")
                     .crossfade(true)
+                    .fallback(R.drawable.fallback)
                     .crossfade(1000)
                     .build()
             } else {
                 ImageRequest.Builder(LocalContext.current)
                     .data("https://image.tmdb.org/t/p/original/$img")
                     .crossfade(true)
+                    .fallback(R.drawable.fallback)
                     .crossfade(1000)
                     .build()
             },

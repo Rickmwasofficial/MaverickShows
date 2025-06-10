@@ -1,5 +1,9 @@
 package com.example.maverickshows.app.search.presentation
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -195,14 +200,9 @@ fun NoSearch(modifier: Modifier = Modifier) {
 
 @Composable
 fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, navigateToDetail: (String, String) -> Unit, modifier: Modifier = Modifier) {
-    Column(
-        modifier = Modifier.padding(start = 10.dp, end = 5.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        ContentLabel("Recent Searches", {  })
-    }
+    ContentLabel("Recent Searches", {  }, Modifier.padding(start = 10.dp, end = 5.dp))
     LazyColumn(
-        modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 10.dp).height(80.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = 1.dp, horizontal = 10.dp).height(80.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp),
     ) {
         items(dbData, key = { it.id }) {item ->
@@ -214,14 +214,22 @@ fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, nav
                 )) }, {
                 navigateToDetail(item.id.toString(), item.type)
             },
-                Modifier.animateItem())
+                Modifier.animateItem(
+                    fadeInSpec = tween(100),
+                    fadeOutSpec = tween(100),
+                    placementSpec = spring(
+                        dampingRatio = 0.6f, // Even lower = more bouncy
+                        stiffness = 200f, // Custom stiffness
+                        visibilityThreshold = IntOffset.VisibilityThreshold
+                    )
+                ))
         }
     }
     Button(
         onClick = { searchViewModel.deleteAll() },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 4.dp),
+            .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(4.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -255,6 +263,8 @@ fun SearchedCard(img: String, title: String, genre: String, overview: String, on
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                         .data("https://image.tmdb.org/t/p/original/$img")
+                        .fallback(R.drawable.fallback)
+                        .placeholder(R.drawable.load)
                         .build(),
                 contentDescription = title,
                 contentScale = ContentScale.Crop,

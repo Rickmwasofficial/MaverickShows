@@ -78,6 +78,11 @@ class SearchViewModel @Inject constructor(
 
         searchJob?.cancel()
 
+        if (normalizedQuery.isEmpty()) {
+            resetToIdle()
+            return
+        }
+
         searchJob = viewModelScope.launch {
             delay(300)
             if (_query.value == normalizedQuery) {
@@ -93,8 +98,28 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteItem(item: RecentSearchEntity) {
+        val currentState = _uiState.value
+        when (currentState) {
+            is SearchUIState.Idle -> {
+                _uiState.value = currentState.copy(
+                    recentSearches = currentState.recentSearches.filterNot { it.id.toString() == item.id }
+                )
+            }
+            is SearchUIState.Success -> {
+                _uiState.value = currentState.copy(
+                    recentSearches = currentState.recentSearches.filterNot { it.id.toString() == item.id }
+                )
+            }
+        }
+
+        // Then update database
         viewModelScope.launch {
-            searchRepImpl.deleteItem(item)
+            try {
+                searchRepImpl.deleteItem(item)
+            } catch (e: Exception) {
+                // If database operation fails, revert the UI change
+                observeRecentSearches() // This will reload from database
+            }
         }
     }
 
@@ -141,4 +166,6 @@ class SearchViewModel @Inject constructor(
 
         return stringGenres
     }
+
+
 }
