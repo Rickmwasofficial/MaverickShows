@@ -30,6 +30,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -139,6 +141,26 @@ fun DetailUiScreen(
                             MoreSuggestions("You may also like", (uiState as DetailUiState.Success).recommendations, detailViewModel, { id: String, type: String ->
                                 navigateToDetail(id, type)
                             }, false)
+                        }
+                    }
+                    item {
+                        Button(
+                            onClick = {  },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp),
+                            shape = RoundedCornerShape(4.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Green,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                text = "Add to Favorites",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                            )
                         }
                     }
                 }

@@ -115,4 +115,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // splashscreen api
+    implementation(libs.androidx.core.splashscreen)
 }

@@ -9,6 +9,7 @@ import com.example.maverickshows.app.actor.domain.GetActorFilmography
 import com.example.maverickshows.app.actor.domain.GetActorImages
 import com.example.maverickshows.app.actor.domain.GetAllActorData
 import com.example.maverickshows.app.core.data.AppDb
+import com.example.maverickshows.app.core.data.FavoritesDao
 import com.example.maverickshows.app.core.data.RecentDao
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
@@ -103,6 +104,11 @@ object AppModule {
     @Provides
     fun provideRecentDao(database: AppDb): RecentDao {
         return database.recentDao()
+    }
+
+    @Provides
+    fun provideFavoriteDao(database: AppDb): FavoritesDao {
+        return database.favoritesDao()
     }
 
     @Provides
