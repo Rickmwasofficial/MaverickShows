@@ -1,5 +1,6 @@
 package com.example.maverickshows.app.search.presentation
 
+import android.widget.Toast
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
@@ -200,6 +201,7 @@ fun NoSearch(modifier: Modifier = Modifier) {
 
 @Composable
 fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, navigateToDetail: (String, String) -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     ContentLabel("Recent Searches", {  }, Modifier.padding(start = 10.dp, end = 5.dp))
     LazyColumn(
         modifier = modifier.fillMaxWidth().padding(vertical = 1.dp, horizontal = 10.dp).height(80.dp),
@@ -211,7 +213,8 @@ fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, nav
                     id = item.id.toString(),
                     title = item.title ?: item.name.toString(),
                     type = item.type
-                )) }, {
+                ))
+                Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show() }, {
                 navigateToDetail(item.id.toString(), item.type)
             },
                 Modifier.animateItem(
@@ -226,7 +229,10 @@ fun RecentSearches(dbData: List<HomeData>, searchViewModel: SearchViewModel, nav
         }
     }
     Button(
-        onClick = { searchViewModel.deleteAll() },
+        onClick = {
+                    searchViewModel.deleteAll()
+                    Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()
+                  },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),

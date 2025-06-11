@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -83,6 +84,7 @@ fun DetailUiScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by detailViewModel.uiState.collectAsState()
+    val context = LocalContext.current
     LaunchedEffect(id, type) {
         if (type.lowercase() == "tv") {
             detailViewModel.getDetails(id, type)
@@ -108,12 +110,14 @@ fun DetailUiScreen(
                         }
                         val likedItems by detailViewModel.likedItems.collectAsState()
                         val isLiked = likedItems.contains((uiState as DetailUiState.Success).data.id.toString())
+                        val toastText = if (isLiked) "Removed from Favorites" else "Added to Favorites"
                         TopBox(
                             (uiState as DetailUiState.Success).data.bg.toString(),
                             (uiState as DetailUiState.Success).data.title.toString(), genres, isFullDesc = true, navigateBack = { navigateToBack() },
                             avg = (uiState as DetailUiState.Success).data.avg!!,
                             isLiked = isLiked,
                             likeTrigger = {
+                                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                                 detailViewModel.likeItem(
                                     !isLiked,
                                     FavoritesEntity(

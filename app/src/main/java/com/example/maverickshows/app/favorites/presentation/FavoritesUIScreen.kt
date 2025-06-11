@@ -1,5 +1,6 @@
 package com.example.maverickshows.app.favorites.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +49,7 @@ fun FavoritesUiScreen(
     navigateToDetail: (String, String) -> Unit,
     modifier: Modifier = Modifier) {
     val uiState by favoriteViewModel.uiState.collectAsState()
+    val context = LocalContext.current
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -102,7 +105,9 @@ fun FavoritesUiScreen(
                             }
                         }
                         Button(
-                            onClick = { favoriteViewModel.deleteAll() },
+                            onClick = { favoriteViewModel.deleteAll()
+                                        Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()
+                                      },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 20.dp),
