@@ -1,13 +1,8 @@
 package com.example.maverickshows.app.home.domain
 
-import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.presentation.ContentUIState
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 data class HomeUseCases(

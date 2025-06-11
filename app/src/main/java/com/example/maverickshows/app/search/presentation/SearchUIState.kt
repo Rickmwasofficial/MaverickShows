@@ -1,9 +1,7 @@
 package com.example.maverickshows.app.search.presentation
 
-import com.example.maverickshows.app.core.data.RecentSearchEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.domain.HomeData
-import kotlinx.coroutines.flow.Flow
 
 interface SearchUIState {
     data class Idle(

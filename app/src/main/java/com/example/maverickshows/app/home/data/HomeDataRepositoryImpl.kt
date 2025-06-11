@@ -1,12 +1,9 @@
 package com.example.maverickshows.app.home.data
 
-import com.example.maverickshows.app.core.data.FavoritesDao
-import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.network.TmdbAPI
 import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.domain.toHomeData
-import kotlinx.coroutines.flow.Flow
 
 class HomeDataRepositoryImpl(
     private val api: TmdbAPI

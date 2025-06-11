@@ -3,7 +3,6 @@ package com.example.maverickshows.app.favorites.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.maverickshows.app.favorites.data.FavoritesRepImpl
-import com.example.maverickshows.app.search.presentation.SearchUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

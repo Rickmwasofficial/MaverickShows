@@ -6,7 +6,6 @@ import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.Trailer
 import com.example.maverickshows.app.core.models.TrailerVideo
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
-import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.HomeData
 import jakarta.inject.Inject
 

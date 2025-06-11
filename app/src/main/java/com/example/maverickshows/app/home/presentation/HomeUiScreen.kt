@@ -36,7 +36,6 @@ import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
-import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.home.domain.HomeData
 import kotlinx.coroutines.delay
 

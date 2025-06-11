@@ -1,10 +1,7 @@
 package com.example.maverickshows.app.home.data
 
-import com.example.maverickshows.app.core.data.FavoritesEntity
-import com.example.maverickshows.app.core.data.RecentSearchEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.home.domain.HomeData
-import kotlinx.coroutines.flow.Flow
 
 interface HomeDataRep {
     suspend fun getTrendingMovies(page: String = "1"): List<HomeData>
