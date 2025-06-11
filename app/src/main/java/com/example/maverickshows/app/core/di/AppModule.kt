@@ -21,6 +21,7 @@ import com.example.maverickshows.app.details.domain.GetImages
 import com.example.maverickshows.app.details.domain.GetRecommendations
 import com.example.maverickshows.app.details.domain.GetTrailers
 import com.example.maverickshows.app.details.domain.ShowDetail
+import com.example.maverickshows.app.favorites.data.FavoritesRepImpl
 import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.GetAllGenres
 import com.example.maverickshows.app.home.domain.GetAllPopular
@@ -135,8 +136,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDetailDataImpl(api: TmdbAPI): DetailDataRepImpl {
-        return DetailDataRepImpl(api)
+    fun provideDetailDataImpl(api: TmdbAPI, favoritesDao: FavoritesDao): DetailDataRepImpl {
+        return DetailDataRepImpl(api, favoritesDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteRepImpl(api: TmdbAPI, favoritesDao: FavoritesDao): FavoritesRepImpl {
+        return FavoritesRepImpl(api, favoritesDao)
     }
 
     @Provides

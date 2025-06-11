@@ -1,7 +1,9 @@
 package com.example.maverickshows.app.core.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,14 +46,7 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
         verticalArrangement = Arrangement.spacedBy(3.dp),
         horizontalAlignment = Alignment.Start,
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/original/$img")
-                .placeholder(R.drawable.load)
-                .crossfade(true)
-                .build(),
-            contentDescription = title,
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = if (expanded) {
                 if (!isImageData) {
                     Modifier.height(
@@ -60,7 +60,18 @@ fun MovieCard(title: String, year: String, genre: String, img: String, expanded:
                     205.dp
                 ).clip(RoundedCornerShape(5.dp))
             }
-        )
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://image.tmdb.org/t/p/original/$img")
+                    .placeholder(R.drawable.load)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(5.dp))
+            )
+        }
         if (!isImageData) {
             Column(
                 modifier = Modifier.padding(4.dp)

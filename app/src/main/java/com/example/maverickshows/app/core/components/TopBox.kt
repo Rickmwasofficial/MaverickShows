@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,7 +40,7 @@ import coil.request.ImageRequest
 import com.example.maverickshows.R
 
 @Composable
-fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }, popularity: Double = 0.0, avg: Double = 0.0) {
+fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = Modifier, isFullDesc: Boolean = false, isActor: Boolean = false, navigateBack: () -> Unit = { }, avg: Double = 0.0, likeTrigger: () -> Unit? = {  }, isLiked: Boolean = false) {
     Box(
         modifier = modifier.fillMaxWidth().height(470.dp).background(Color.Black),
     ) {
@@ -83,16 +86,20 @@ fun TopBox(img: String, title: String, cats: List<String>, modifier: Modifier = 
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Card(
-                            modifier = Modifier.width(30.dp).height(25.dp).fillMaxHeight(),
-                            shape = RoundedCornerShape(5.dp),
+                        val icon = if (isLiked) Icons.Filled.Favorite else Icons.Rounded.FavoriteBorder
+                        IconButton(
+                            onClick = { likeTrigger() },
+                            modifier = modifier
+                                .background(
+                                    Color.Transparent,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .height(40.dp)
                         ) {
-                            Text(
-                                text = popularity.toString(),
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.ExtraBold,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxSize().padding(vertical = 5.dp)
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = if (isLiked) Color.Green else Color.White
                             )
                         }
                         Card(

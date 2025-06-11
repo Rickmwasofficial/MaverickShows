@@ -42,6 +42,7 @@ import com.example.maverickshows.app.actor.presentation.ActorViewModel
 import com.example.maverickshows.app.details.presentation.DetailUiScreen
 import com.example.maverickshows.app.details.presentation.DetailViewModel
 import com.example.maverickshows.app.expanded.presentation.ExpandedScreen
+import com.example.maverickshows.app.favorites.presentation.FavoriteViewModel
 import com.example.maverickshows.app.favorites.presentation.FavoritesUiScreen
 import com.example.maverickshows.app.home.presentation.HomeUiScreen
 import com.example.maverickshows.app.home.presentation.HomeViewModel
@@ -169,6 +170,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Composable
 fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     val homeViewModel: HomeViewModel = hiltViewModel()
+    val favoriteViewModel = hiltViewModel<FavoriteViewModel>()
     NavHost(
         navController = navController,
         startDestination = Home,
@@ -195,7 +197,13 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
             )
         }
         composable<Favorites> {
-            FavoritesUiScreen()
+
+            FavoritesUiScreen(
+                favoriteViewModel = favoriteViewModel,
+                navigateToDetail = { id: String, type: String ->
+                    navController.navigate(Detail(id, type))
+                },
+            )
         }
         composable<Expanded> { backStackEntry ->
             val route = backStackEntry.toRoute<Expanded>()

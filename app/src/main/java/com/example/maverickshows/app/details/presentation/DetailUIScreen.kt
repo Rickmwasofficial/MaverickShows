@@ -61,6 +61,7 @@ import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
+import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.TrailerVideo
 import com.example.maverickshows.app.details.domain.DetailCredits
@@ -105,10 +106,23 @@ fun DetailUiScreen(
                         for (genre in (uiState as DetailUiState.Success).data.genres) {
                             genres.add(genre.name)
                         }
-                        TopBox((uiState as DetailUiState.Success).data.bg.toString(),
+                        val likedItems by detailViewModel.likedItems.collectAsState()
+                        val isLiked = likedItems.contains((uiState as DetailUiState.Success).data.id.toString())
+                        TopBox(
+                            (uiState as DetailUiState.Success).data.bg.toString(),
                             (uiState as DetailUiState.Success).data.title.toString(), genres, isFullDesc = true, navigateBack = { navigateToBack() },
-                            popularity = (uiState as DetailUiState.Success).data.popularity!!,
-                            avg = (uiState as DetailUiState.Success).data.avg!!)
+                            avg = (uiState as DetailUiState.Success).data.avg!!,
+                            isLiked = isLiked,
+                            likeTrigger = {
+                                detailViewModel.likeItem(
+                                    !isLiked,
+                                    FavoritesEntity(
+                                        (uiState as DetailUiState.Success).data.id.toString(),
+                                        (uiState as DetailUiState.Success).data.title.toString(),
+                                        type = type
+                                    )
+                                )}
+                        )
                     }
                     item {
                         RuntimeLang((uiState as DetailUiState.Success).data)
@@ -141,26 +155,6 @@ fun DetailUiScreen(
                             MoreSuggestions("You may also like", (uiState as DetailUiState.Success).recommendations, detailViewModel, { id: String, type: String ->
                                 navigateToDetail(id, type)
                             }, false)
-                        }
-                    }
-                    item {
-                        Button(
-                            onClick = {  },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp),
-                            shape = RoundedCornerShape(4.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Green,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(
-                                text = "Add to Favorites",
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.ExtraBold,
-                                modifier = Modifier
-                            )
                         }
                     }
                 }

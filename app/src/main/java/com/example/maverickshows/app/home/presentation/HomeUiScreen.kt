@@ -36,6 +36,7 @@ import com.example.maverickshows.app.core.components.ContentLabel
 import com.example.maverickshows.app.core.components.LoadingScreen
 import com.example.maverickshows.app.core.components.MovieCard
 import com.example.maverickshows.app.core.components.TopBox
+import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.home.domain.HomeData
 import kotlinx.coroutines.delay
 
@@ -269,8 +270,13 @@ fun MovieRow(title: String, data: List<HomeData>, onClick: () -> Unit, navigateT
             contentPadding = PaddingValues(1.dp)
         ) {
             items(data.size) { num ->
-                val genres = homeViewModel.getStringGenre(data[num].genre)
-                MovieCard(data[num].title ?: data[num].name.toString(), data[num].releaseDate, genres[0], if (expanded) data[num].img2 else data[num].img, expanded, navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
+                val item = data[num]
+                val genres = homeViewModel.getStringGenre(item.genre)
+                MovieCard(
+                    data[num].title ?: data[num].name.toString(),
+                    data[num].releaseDate, genres[0],
+                    if (expanded) data[num].img2 else data[num].img, expanded,
+                    navigateToDetail = { navigateToDetail((data[num].id.toString()), data[num].type) })
             }
         }
     }

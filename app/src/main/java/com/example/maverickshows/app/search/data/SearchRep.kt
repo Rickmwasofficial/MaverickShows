@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface SearchRep {
     suspend fun getSearchResults(q: String): List<HomeData>
     suspend fun getAllGenres(): List<Genre>
-    suspend fun getAllSearchedItemsStream(): Flow<List<RecentSearchEntity>>
+    fun getAllSearchedItemsStream(): Flow<List<RecentSearchEntity>>
     suspend fun insertSearchedItem(item: RecentSearchEntity): String
     suspend fun deleteItem(item: RecentSearchEntity): String
     suspend fun getSavedShows(saved: List<RecentSearchEntity>): List<HomeData>

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchRepImpl(
     private val api: TmdbAPI,
-    private val searchDao: RecentDao
+    private val searchDao: RecentDao,
 ): SearchRep {
     override suspend fun getSearchResults(q: String): List<HomeData> {
         return (api.getMovieSearch(q = q).results.map { it.toHomeData() } + api.getTvSearch(q = q).results.map { it.toHomeData() })
@@ -21,7 +21,7 @@ class SearchRepImpl(
                 api.getMovieGenres().genres.filter { it.id != null && it.name.isNotBlank() })
     }
 
-    override suspend fun getAllSearchedItemsStream(): Flow<List<RecentSearchEntity>> {
+    override fun getAllSearchedItemsStream(): Flow<List<RecentSearchEntity>> {
         return searchDao.getAllSearches()
     }
 

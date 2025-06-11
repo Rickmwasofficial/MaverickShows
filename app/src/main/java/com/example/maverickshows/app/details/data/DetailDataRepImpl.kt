@@ -1,5 +1,7 @@
 package com.example.maverickshows.app.details.data
 
+import com.example.maverickshows.app.core.data.FavoritesDao
+import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.Trailer
@@ -10,9 +12,11 @@ import com.example.maverickshows.app.details.domain.toDetailCredits
 import com.example.maverickshows.app.details.domain.toDetailData
 import com.example.maverickshows.app.home.domain.HomeData
 import com.example.maverickshows.app.home.domain.toHomeData
+import kotlinx.coroutines.flow.Flow
 
 class DetailDataRepImpl(
-    private val api: TmdbAPI
+    private val api: TmdbAPI,
+    private val favoritesDao: FavoritesDao
 ): DetailDataRep {
     override suspend fun getMovieDetail(id: String): DetailData {
         return api.getMovieDetails(id = id).toDetailData()
@@ -69,5 +73,26 @@ class DetailDataRepImpl(
 
     override suspend fun getMovieTrailers(id: String): Trailer {
         return  api.getMovieTrailers(id = id)
+    }
+    override fun getAllLikedItemsStream(): Flow<List<FavoritesEntity>> {
+        return favoritesDao.getAllFavorites()
+    }
+
+    override suspend fun insertLikedItem(item: FavoritesEntity): String {
+        try {
+            favoritesDao.insert(favorite = item)
+            return "Success"
+        } catch (e: Exception) {
+            return e.message.toString()
+        }
+    }
+
+    override suspend fun deleteLikedItem(item: FavoritesEntity): String {
+        try {
+            favoritesDao.delete(favorite = item)
+            return "Delete Success"
+        } catch (e: Exception) {
+            return e.message.toString()
+        }
     }
 }

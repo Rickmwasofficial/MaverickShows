@@ -1,10 +1,12 @@
 package com.example.maverickshows.app.details.domain
 
+import com.example.maverickshows.app.core.data.FavoritesEntity
 import com.example.maverickshows.app.core.models.Genre
 import com.example.maverickshows.app.core.models.ImageData
 import com.example.maverickshows.app.core.models.Trailer
 import com.example.maverickshows.app.core.models.TrailerVideo
 import com.example.maverickshows.app.details.data.DetailDataRepImpl
+import com.example.maverickshows.app.home.data.HomeDataRepositoryImpl
 import com.example.maverickshows.app.home.domain.HomeData
 import jakarta.inject.Inject
 
@@ -107,5 +109,17 @@ class GetGenres @Inject constructor(
 ) {
     suspend operator fun invoke(): List<Genre> {
         return detailDataRepImpl.getGenres()
+    }
+}
+
+class LikeUseCase @Inject constructor(
+    private val repository: DetailDataRepImpl
+) {
+    suspend operator fun invoke(state: Boolean, item: FavoritesEntity) {
+        if (state) {
+            repository.insertLikedItem(item = item)
+        } else {
+            repository.deleteLikedItem(item = item)
+        }
     }
 }
